@@ -2,105 +2,60 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 파티클 이펙트 생성 및 화면 내 탄막 제거를 관리하는 매니저 클래스입니다.
+/// </summary>
 public class SpecialEffectsHelper : MonoBehaviour {
-    /// <summary>
-    /// Singleton
-    /// </summary>
-    public static SpecialEffectsHelper Instance;
     
-    public ParticleSystem hitEffect,explosionEffect,enemyOverEffect;
+    public static SpecialEffectsHelper Instance; // 싱글톤 인스턴스
+    
+    [Header("파티클 프리팹")]
+    public ParticleSystem hitEffect;       // 타격 효과
+    public ParticleSystem explosionEffect; // 폭발 효과
+    public ParticleSystem enemyOverEffect; // 적 파괴 효과
 
     void Awake()
     {
-        // Register the singleton
-        if (Instance != null)
-        {
-            Debug.LogError("Multiple instances of SpecialEffectsHelper!");
-        }
-
+        if (Instance != null) Debug.LogError("SpecialEffectsHelper 인스턴스가 이미 존재합니다!");
         Instance = this;
     }
 
-    // Use this for initialization
-    void Start()
-    {
-        //SpecialEffectsHelper.Instance.Hit(transform.position);
-    }
+    /// <summary> 타격 위치에 효과 생성 </summary>
+    public void Hit(Vector3 position) => instantiate(hitEffect, position);
 
-    // Update is called once per frame
-    void Update()
-    {
+    /// <summary> 폭발 위치에 효과 생성 </summary>
+    public void Explosion(Vector3 position) => instantiate(explosionEffect, position);
 
-    }
+    /// <summary> 적 파괴 위치에 효과 생성 </summary>
+    public void DefeatEnemy(Vector3 position) => instantiate(enemyOverEffect, position);
 
-    /// <summary>
-    /// 在给定位置创建爆炸特效
-    /// </summary>
-    /// <param name="position"></param>
-    public void Hit(Vector3 position)
-    {
-        // 火焰特效
-        instantiate(hitEffect, position);
-    }
-
-    public void Explosion(Vector3 position)
-    {
-        // 爆炸特效
-        instantiate(explosionEffect, position);
-    }
-
-    public void DefeatEnemy(Vector3 position)
-    {
-        // 敌机爆炸特效
-        instantiate(enemyOverEffect, position);
-    }
-
-    //清除敌人弹幕
+    /// <summary> 화면 내의 모든 적 탄막을 회수(삭제) </summary>
     public void ClearEnemyBullet()
     {
-        GameObject[] m_Desk = GameObject.FindGameObjectsWithTag("EnemyBullet");
-        for(int i=0;i<m_Desk.Length; i++)
+        GameObject[] m_Bullets = GameObject.FindGameObjectsWithTag("EnemyBullet");
+        foreach(var bullet in m_Bullets)
         {
-            m_Desk[i].GetComponent<ShotScript>().Recycle();
+            // ShotScript의 Recycle 메서드를 호출하여 오브젝트 풀로 반환
+            bullet.GetComponent<ShotScript>().Recycle();
         }
     }
 
-    //清除一定区域内的敌人弹幕
-    /*
-    public void ClearEnemyBullet(Bounds bounds)
-    {
-        GameObject[] m_Desk = GameObject.FindGameObjectsWithTag("EnemyBullet");
-        for (int i = 0; i < m_Desk.Length; i++)
-        {
-            if(bounds.Contains (m_Desk [i].transform .position))
-            {
-                Destroy(m_Desk[i]);
-            }
-        }
-    }*/
-
-    //清除自机弹幕
+    /// <summary> 화면 내의 모든 플레이어 탄막을 삭제 </summary>
     public void ClearPlayerBullet()
     {
-        GameObject[] m_Desk = GameObject.FindGameObjectsWithTag("PlayerBullet");
-        for (int i = 0; i < m_Desk.Length; i++)
+        GameObject[] m_Bullets = GameObject.FindGameObjectsWithTag("PlayerBullet");
+        foreach (var bullet in m_Bullets)
         {
-            Destroy(m_Desk[i]);
+            Destroy(bullet);
         }
     }
 
-    /// <summary>
-    /// 从预制体中实例化粒子特效
-    /// </summary>
-    /// <param name="prefab"></param>
-    /// <returns></returns>
+    /// <summary> 파티클 시스템 인스턴스화 </summary>
     private ParticleSystem instantiate(ParticleSystem prefab, Vector3 position)
     {
-        ParticleSystem newParticleSystem = Instantiate(prefab, position, Quaternion.identity) as ParticleSystem;
-
-        // 确保它会被销毁
-        //Destroy(newParticleSystem.gameObject, newParticleSystem.startLifetime);
-
+        if (prefab == null) return null;
+        ParticleSystem newParticleSystem = Instantiate(prefab, position, Quaternion.identity);
+        
         return newParticleSystem;
     }
 }
