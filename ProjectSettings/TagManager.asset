@@ -8,6 +8,8 @@ TagManager:
   - PlayerBullet
   - Lifestar
   - Bombstar
+  - Bullet
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -15,8 +17,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Bullet
+  - Bomb
   - 
   - 
   - 
