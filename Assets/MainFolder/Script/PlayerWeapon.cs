@@ -15,11 +15,13 @@ public class PlayerWeapon : MonoBehaviour
     public float laserDuration = 1.5f;
     public float laserCooldown = 3.0f;
 
-    // 상태 변수들
+    // 상태 변수
     private float nextFireTime = 0f;
     private float lastLaserTime = -999f;
     private bool isInvincible = false;
     private bool isLaserActive = false;
+
+    // --- 외부(PlayerController)에서 호출하는 함수들 ---
 
     public void TryFire()
     {
@@ -27,23 +29,6 @@ public class PlayerWeapon : MonoBehaviour
         {
             FireBullets();
             nextFireTime = Time.time + fireInterval;
-        }
-    }
-
-    private void FireBullets()
-    {
-        bool isFocused = Input.GetKey(KeyCode.LeftShift);
-        
-        for (int i = 0; i < firePoints.Length; i++)
-        {
-            GameObject bullet = Instantiate(bulletPrefab, firePoints[i].position, Quaternion.identity);
-            Rigidbody2D bRb = bullet.GetComponent<Rigidbody2D>();
-            
-            // i=0,1 (위쪽), i=2,3 (아래쪽) 방향 조절
-            float angle = (i < 2) ? (0.2f * (2 - i)) : (-0.2f * (i - 1));
-            Vector2 dir = isFocused ? Vector2.right : new Vector2(1f, angle).normalized;
-            
-            bRb.velocity = dir * bulletSpeed;
         }
     }
 
@@ -55,7 +40,27 @@ public class PlayerWeapon : MonoBehaviour
         }
     }
 
-    IEnumerator ShootLaser()
+    // --- 내부 동작 로직 ---
+
+    private void FireBullets()
+    {
+        bool isFocused = Input.GetKey(KeyCode.LeftShift);
+        
+        for (int i = 0; i < firePoints.Length; i++)
+        {
+            GameObject bullet = Instantiate(bulletPrefab, firePoints[i].position, Quaternion.identity);
+            Rigidbody2D bRb = bullet.GetComponent<Rigidbody2D>();
+            
+            // 저속 모드면 일직선, 아니면 부채꼴 (spread 값을 조절하여 퍼짐 정도 수정)
+            float spread = 0.05f; 
+            float angle = (i < 2) ? (spread * (2 - i)) : (-spread * (i - 1));
+            Vector2 dir = isFocused ? Vector2.right : new Vector2(1f, angle).normalized;
+            
+            bRb.velocity = dir * bulletSpeed;
+        }
+    }
+
+    private IEnumerator ShootLaser()
     {
         isLaserActive = true;
         isInvincible = true;

@@ -1,24 +1,44 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float health = 100f;
-    [SerializeField] private GameObject explosionEffect; // 파괴 시 이펙트
+    [Header("Stats")]
+    public float maxHealth = 100f;
+    private float currentHealth;
+
+    [Header("UI")]
+    [SerializeField] private Image healthBar; // 인스펙터에서 링 모양 Image를 여기에 드래그
+
+    private void Start()
+    {
+        currentHealth = maxHealth;
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // 태그를 사용하여 플레이어 탄환인지 확인
+        // 1. 태그 확인 (Bullet 태그가 정확히 설정되어 있는지 확인)
         if (other.CompareTag("Bullet"))
         {
-            TakeDamage(10f); // 탄환의 데미지
-            // 탄환은 즉시 오브젝트 풀로 반환 (Bullet 스크립트에서 처리)
+            TakeDamage(10f);
+            
+            // 탄환은 풀(Pool)로 반환하거나 삭제
+            // (이미 BulletPooler를 쓴다면 BulletPooler.Instance.ReturnBullet(other.gameObject) 사용)
+            Destroy(other.gameObject); 
         }
     }
 
-    private void TakeDamage(float amount)
+    public void TakeDamage(float damage)
     {
-        health -= amount;
-        if (health <= 0)
+        currentHealth -= damage;
+
+        // 2. UI 갱신 (fillAmount는 0~1 사이 값)
+        if (healthBar != null)
+        {
+            healthBar.fillAmount = currentHealth / maxHealth;
+        }
+
+        if (currentHealth <= 0)
         {
             Die();
         }
@@ -26,9 +46,7 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        if (explosionEffect != null)
-            Instantiate(explosionEffect, transform.position, Quaternion.identity);
-        
-        Destroy(gameObject); // 혹은 적 오브젝트 풀로 반환
+        // 파괴 로직
+        Destroy(gameObject);
     }
 }
