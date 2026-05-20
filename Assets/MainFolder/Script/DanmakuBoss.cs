@@ -1,55 +1,138 @@
 using UnityEngine;
 using System.Collections;
-using DG.Tweening;       // DOTween 필수 네임스페이스
-using Danmaku.Data;      // 업로드하신 ScriptableObject 데이터 사용
+using System.Collections.Generic;
+using DG.Tweening;       
+using Danmaku.Data;      
+
+// 인스펙터에서 편하게 페이즈를 조립하기 위한 클래스
+[System.Serializable]
+public class BossPhase
+{
+    [Tooltip("이 페이즈에 사용할 탄막/이동 패턴")]
+    public DanmakuData pattern;
+    [Tooltip("이 페이즈의 보스 체력")]
+    public float phaseHP = 1000f;
+    [Tooltip("페이즈 진입 시 터트릴 파티클 이펙트 프리팹 (선택)")]
+    public GameObject transitionEffect;
+    [Tooltip("페이즈 진입 시 변경할 배경 이미지 (선택)")]
+    public Sprite newBackground;
+}
 
 public class DanmakuBoss : MonoBehaviour
 {
-    [Header("Pattern Data")]
-    [Tooltip("유니티 인스펙터에서 우클릭으로 생성한 DanmakuData를 넣으세요")]
-    public DanmakuData currentPattern; 
+    [Header("Phase Settings")]
+    [Tooltip("페이즈를 원하는 만큼 추가하세요!")]
+    public List<BossPhase> phases;
+    public Vector3 centerPosition = new Vector3(0, 3f, 0); // 복귀할 원래 위치
+    
+    // 상태 변수
+    private int currentPhaseIndex = 0;
+    public bool isTransitioning = false; // 무적 및 전환 상태
     
     private Transform player;
+    private Enemy enemyScript;
+    private PlayerDrivenParallax parallaxScript;
 
     private void Start()
     {
-        // 씬에서 플레이어를 자동으로 찾음
         GameObject pObj = GameObject.FindGameObjectWithTag("Player");
         if (pObj != null) player = pObj.transform;
 
-        // 패턴 데이터가 있으면 실행
-        if (currentPattern != null)
+        enemyScript = GetComponent<Enemy>();
+        parallaxScript = FindObjectOfType<PlayerDrivenParallax>(); // 씬에 있는 패럴랙스 배경 자동 찾기
+
+        if (phases.Count > 0)
         {
-            StartCoroutine(ExecuteDanmaku(currentPattern));
+            StartCoroutine(StartPhaseRoutine(currentPhaseIndex));
         }
     }
 
+    // 1. 특정 페이즈 시작
+    private IEnumerator StartPhaseRoutine(int index)
+    {
+        isTransitioning = false;
+        BossPhase currentPhase = phases[index];
+
+        // 체력 및 UI 세팅
+        if (enemyScript != null) enemyScript.SetupHP(currentPhase.phaseHP);
+
+        // 탄막 및 이동 패턴 실행
+        if (currentPhase.pattern != null)
+        {
+            yield return StartCoroutine(ExecuteDanmaku(currentPhase.pattern));
+        }
+    }
+
+    // 2. 체력이 0이 되었을 때 Enemy 스크립트에서 호출됨
+    public void OnPhaseDefeated()
+    {
+        if (isTransitioning) return;
+        StartCoroutine(PhaseTransitionRoutine());
+    }
+
+    // 3. 페이즈 전환 연출 (이동, 배경 변경, 이펙트)
+    private IEnumerator PhaseTransitionRoutine()
+    {
+        isTransitioning = true;
+        
+        // 진행 중인 모든 탄막 발사 및 이동 코루틴 강제 정지
+        StopAllCoroutines(); 
+        transform.DOKill(); // DOTween 이동 강제 취소
+
+        // UI 끄기 및 파티클 발생
+        if (enemyScript != null) enemyScript.HideUI();
+        if (phases[currentPhaseIndex].transitionEffect != null)
+        {
+            Instantiate(phases[currentPhaseIndex].transitionEffect, transform.position, Quaternion.identity);
+        }
+
+        // 중앙으로 복귀 (1.5초 동안 부드럽게)
+        transform.DOMove(centerPosition, 1.5f).SetEase(Ease.InOutQuad);
+
+        // 배경 전환 연출 (PlayerDrivenParallax의 기능 활용)
+        if (parallaxScript != null && phases[currentPhaseIndex].newBackground != null)
+        {
+            parallaxScript.ChangePhase(phases[currentPhaseIndex].newBackground);
+        }
+
+        // 전환 연출을 감상하며 3초 대기
+        yield return new WaitForSeconds(3.0f);
+
+        // 다음 페이즈로 넘어가기
+        currentPhaseIndex++;
+        
+        if (currentPhaseIndex < phases.Count)
+        {
+            // 다음 페이즈 시작
+            StartCoroutine(StartPhaseRoutine(currentPhaseIndex));
+        }
+        else
+        {
+            // 모든 페이즈 끝 (보스 파괴)
+            Instantiate(phases[currentPhaseIndex - 1].transitionEffect, transform.position, Quaternion.identity); // 마지막 폭발
+            Destroy(gameObject);
+            Debug.Log("보스 클리어!");
+        }
+    }
+
+    // ============================================
+    // [아래는 기존의 ExecuteDanmaku, FireBarrageRoutine, Fire, SpawnBullet 코드 그대로 유지]
+    // ============================================
+
     private IEnumerator ExecuteDanmaku(DanmakuData danmaku)
     {
-        // ============================================
-        // 1. DOTween을 활용한 이동 로직 (DanmakuMove)
-        // ============================================
         if (danmaku.move != null && danmaku.move.type == DanmakuMoveType.RandomMove)
         {
             yield return new WaitForSeconds(danmaku.move.startDelay);
-            
-            // 데이터에 정의된 최소/최대 범위 내에서 랜덤 위치 선정
             Vector3 targetPos = new Vector3(
                 Random.Range(danmaku.move.minX, danmaku.move.maxX),
                 Random.Range(danmaku.move.minY, danmaku.move.maxY),
                 0
             );
-
-            // [DOTween] 목표 위치로 1.5초 동안 부드럽게(InOutSine) 이동
             transform.DOMove(targetPos, 1.5f).SetEase(Ease.InOutSine);
-            
-            // 이동이 끝날 때까지 대기
             yield return new WaitForSeconds(1.5f); 
         }
 
-        // ============================================
-        // 2. 탄막 발사 로직 (BarrageData 읽기)
-        // ============================================
         foreach (var barrage in danmaku.data)
         {
             StartCoroutine(FireBarrageRoutine(barrage));
@@ -58,10 +141,7 @@ public class DanmakuBoss : MonoBehaviour
 
     private IEnumerator FireBarrageRoutine(BarrageData barrage)
     {
-        // 발사 전 딜레이 대기
         yield return new WaitForSeconds(barrage.startDelay);
-
-        // interval 간격으로 반복 사격 (무한 발사)
         while (true)
         {
             Fire(barrage.fireData, barrage.shotData);
@@ -69,54 +149,48 @@ public class DanmakuBoss : MonoBehaviour
         }
     }
 
-    // 실제 총알을 쏘는 핵심 함수
     private void Fire(FireData fireData, ShotData shotData)
     {
-        // 1. 기준 방향 설정 (조준형 vs 고정형)
         Vector3 centerDir = fireData.startDir;
         if (fireData.directionType == DirectionType.Aimed && player != null)
         {
             centerDir = (player.position - transform.position).normalized;
         }
 
-        // 시작 각도 오프셋 적용
         centerDir = Quaternion.Euler(0, 0, fireData.startAngle) * centerDir;
         
         float bulletSpeed = shotData.speed.value;
-        int pIndex = shotData.prefabIndex; // <--- 데이터에서 프리팹 인덱스를 가져옵니다!
+        int pIndex = shotData.prefabIndex; 
 
-        // 2. FireType(Round, Sector, Spray)에 따른 패턴 발사
-        if (fireData.type == FireType.Round) // 360도 원형 방사
+        if (fireData.type == FireType.Round) 
         {
             int count = 16; 
             float angleStep = 360f / count;
-            
             for (int i = 0; i < count; i++)
             {
                 Vector3 dir = Quaternion.Euler(0, 0, angleStep * i) * centerDir;
-                SpawnBullet(dir, bulletSpeed, pIndex); // <--- 인덱스 추가!
+                SpawnBullet(dir, bulletSpeed, pIndex); 
             }
         }
-        else if (fireData.type == FireType.Sector) // 부채꼴 모양
+        else if (fireData.type == FireType.Sector) 
         {
             int count = 5;
             float spreadAngle = 15f; 
             float startAngle = -((count - 1) * spreadAngle) / 2f;
-
             for (int i = 0; i < count; i++)
             {
                 Vector3 dir = Quaternion.Euler(0, 0, startAngle + (spreadAngle * i)) * centerDir;
-                SpawnBullet(dir, bulletSpeed, pIndex); // <--- 인덱스 추가!
+                SpawnBullet(dir, bulletSpeed, pIndex); 
             }
         }
-        else if (fireData.type == FireType.Spray) // 랜덤 흩뿌리기
+        else if (fireData.type == FireType.Spray) 
         {
             int count = 8;
             for (int i = 0; i < count; i++)
             {
                 float randomAngle = Random.Range(-45f, 45f);
                 Vector3 dir = Quaternion.Euler(0, 0, randomAngle) * centerDir;
-                SpawnBullet(dir, bulletSpeed, pIndex); // <--- 인덱스 추가!
+                SpawnBullet(dir, bulletSpeed, pIndex); 
             }
         }
     }
@@ -124,17 +198,12 @@ public class DanmakuBoss : MonoBehaviour
     private void SpawnBullet(Vector3 dir, float speed, int prefabIndex)
     {
         if (BulletPooler.Instance == null) return;
-
-        // 인덱스를 넘겨서 원하는 총알을 꺼냄
         GameObject bullet = BulletPooler.Instance.GetBullet(prefabIndex, transform.position, Quaternion.identity);
         
         if (bullet != null)
         {
             Bullet b = bullet.GetComponent<Bullet>();
             b.poolIndex = prefabIndex;
-            
-            // [핵심 해결] Rigidbody2D.velocity 대신 업그레이드된 Setup() 함수를 호출합니다!
-            // 이 함수가 불려야 총알의 방향, 속도, 수명(Lifetime)이 정상적으로 세팅됩니다.
             b.Setup(dir, speed);
         }
     }

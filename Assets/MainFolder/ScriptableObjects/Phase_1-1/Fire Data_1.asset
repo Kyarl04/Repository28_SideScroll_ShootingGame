@@ -16,7 +16,7 @@ MonoBehaviour:
   directionType: 2
   startAngle: 0
   startDistance: 0.5
-  count: 7
+  count: 9
   posDir: {x: 0, y: 0, z: 0}
   posStartDistance: 0
   delayOperations: []

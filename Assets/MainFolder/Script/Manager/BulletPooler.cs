@@ -5,70 +5,128 @@ public class BulletPooler : MonoBehaviour
 {
     public static BulletPooler Instance;
 
-    [Header("Bullet Prefabs (인덱스 순서대로 등록)")]
-    [Tooltip("0:기본탄, 1:빨간탄, 2:파란탄 등등...")]
+    [Header("1. Bullet Prefabs (인덱스 순서대로 등록)")]
     public GameObject[] bulletPrefabs; 
-    public int poolSizePerPrefab = 100;
+    public int poolSizePerBullet = 100;
+
+    [Header("2. Effect Prefabs (인덱스 순서대로 등록)")]
+    public GameObject[] effectPrefabs; // 새로 추가됨!
+    public int poolSizePerEffect = 20;  // 이펙트는 총알보다 적게
 
     // 큐들의 리스트 (프리팹 개수만큼 큐를 생성)
-    private List<Queue<GameObject>> pools = new List<Queue<GameObject>>();
+    private List<Queue<GameObject>> bulletPools = new List<Queue<GameObject>>();
+    private List<Queue<GameObject>> effectPools = new List<Queue<GameObject>>(); // 새로 추가됨!
 
     private void Awake() 
     {
         Instance = this;
-        InitializePools();
+        InitializeBulletPools();
+        InitializeEffectPools(); // 새로 추가됨!
     }
 
-    private void InitializePools()
+    // ============================================
+    // [Bullet 관리 로직 - 기존과 동일]
+    // ============================================
+    private void InitializeBulletPools()
     {
+        bulletPools.Clear();
         for (int i = 0; i < bulletPrefabs.Length; i++)
         {
             Queue<GameObject> newPool = new Queue<GameObject>();
-            
-            // 프리팹마다 100개씩 미리 생성
-            for (int j = 0; j < poolSizePerPrefab; j++)
+            for (int j = 0; j < poolSizePerBullet; j++)
             {
+                if (bulletPrefabs[i] == null) continue;
                 GameObject obj = Instantiate(bulletPrefabs[i], transform);
                 obj.SetActive(false);
                 newPool.Enqueue(obj);
             }
-            pools.Add(newPool);
+            bulletPools.Add(newPool);
         }
     }
 
-    // [핵심] 이제 인덱스 번호를 받아서 해당 큐에서 총알을 꺼냅니다.
     public GameObject GetBullet(int index, Vector3 position, Quaternion rotation)
     {
-        // 잘못된 인덱스 방지
-        if (index < 0 || index >= pools.Count) 
-        {
-            Debug.LogError($"BulletPooler: {index}번 인덱스가 없습니다!");
-            return null;
-        }
+        if (index < 0 || index >= bulletPools.Count) return null;
 
-        if (pools[index].Count > 0)
+        while (bulletPools[index].Count > 0)
         {
-            GameObject obj = pools[index].Dequeue();
+            GameObject obj = bulletPools[index].Dequeue();
+            if (obj == null) continue;
             obj.transform.position = position;
             obj.transform.rotation = rotation;
             obj.SetActive(true);
             return obj;
         }
-        else
+
+        GameObject newObj = Instantiate(bulletPrefabs[index], transform);
+        newObj.transform.position = position;
+        newObj.transform.rotation = rotation;
+        return newObj;
+    }
+
+    public void ReturnBullet(GameObject obj, int index)
+    {
+        if (obj == null) return;
+        if (index < 0 || index >= bulletPools.Count)
         {
-            // 큐가 비었을 경우 추가 생성 (동적 확장)
-            GameObject obj = Instantiate(bulletPrefabs[index], transform);
-            obj.transform.position = position;
-            obj.transform.rotation = rotation;
-            return obj;
+            Destroy(obj); 
+            return;
+        }
+        obj.SetActive(false);
+        bulletPools[index].Enqueue(obj);
+    }
+
+    // ============================================
+    // [NEW] Effect 관리 로직 (새로 추가됨!)
+    // ============================================
+    private void InitializeEffectPools()
+    {
+        effectPools.Clear();
+        for (int i = 0; i < effectPrefabs.Length; i++)
+        {
+            Queue<GameObject> newPool = new Queue<GameObject>();
+            for (int j = 0; j < poolSizePerEffect; j++)
+            {
+                if (effectPrefabs[i] == null) continue;
+                GameObject obj = Instantiate(effectPrefabs[i], transform);
+                obj.SetActive(false);
+                newPool.Enqueue(obj);
+            }
+            effectPools.Add(newPool);
         }
     }
 
-    // 반환할 때 이 총알이 몇 번 인덱스인지 알아야 하므로 이름(name)을 활용합니다.
-    // (더 완벽한 방법은 Bullet 스크립트 안에 자신의 index를 저장해두는 것입니다)
-    public void ReturnBullet(GameObject obj, int index)
+    // 이펙트를 꺼내는 함수
+    public GameObject GetEffect(int index, Vector3 position, Quaternion rotation)
     {
+        if (index < 0 || index >= effectPools.Count) return null;
+
+        while (effectPools[index].Count > 0)
+        {
+            GameObject obj = effectPools[index].Dequeue();
+            if (obj == null) continue;
+            obj.transform.position = position;
+            obj.transform.rotation = rotation;
+            obj.SetActive(true);
+            return obj;
+        }
+
+        GameObject newObj = Instantiate(effectPrefabs[index], transform);
+        newObj.transform.position = position;
+        newObj.transform.rotation = rotation;
+        return newObj;
+    }
+
+    // 이펙트를 돌려보내는 함수 (이펙트 스스로 호출하게 만들 것입니다)
+    public void ReturnEffect(GameObject obj, int index)
+    {
+        if (obj == null) return;
+        if (index < 0 || index >= effectPools.Count)
+        {
+            Destroy(obj); 
+            return;
+        }
         obj.SetActive(false);
-        pools[index].Enqueue(obj);
+        effectPools[index].Enqueue(obj);
     }
 }

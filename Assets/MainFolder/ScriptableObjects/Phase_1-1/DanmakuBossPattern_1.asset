@@ -28,4 +28,4 @@ MonoBehaviour:
     interval: 2.5
     delay: 0.5
     duration: 1
-  hp: 400
+  hp: 3000

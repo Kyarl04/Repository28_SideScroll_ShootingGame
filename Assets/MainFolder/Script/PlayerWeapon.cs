@@ -9,6 +9,10 @@ public class PlayerWeapon : MonoBehaviour
     public float bulletSpeed = 10f;
     public float fireInterval = 0.1f;
 
+    [Header("Player Bullet Setup")]
+    [Tooltip("BulletPooler에 등록된 플레이어 총알의 인덱스 번호 (예: 0)")]
+    public int playerBulletPoolIndex = 0; // 인스펙터에서 플레이어 총알 인덱스를 적어주세요.
+
     [Header("Laser Settings")]
     public GameObject laserObject;
     public ParticleSystem magicCircle;
@@ -48,18 +52,26 @@ public class PlayerWeapon : MonoBehaviour
         
         for (int i = 0; i < firePoints.Length; i++)
         {
-            GameObject bullet = Instantiate(bulletPrefab, firePoints[i].position, Quaternion.identity);
-            Rigidbody2D bRb = bullet.GetComponent<Rigidbody2D>();
+            // 1. 구식 Instantiate 대신 오브젝트 풀링(BulletPooler) 사용
+            GameObject bullet = BulletPooler.Instance.GetBullet(playerBulletPoolIndex, firePoints[i].position, Quaternion.identity);
             
-            // 저속 모드면 일직선, 아니면 부채꼴 (spread 값을 조절하여 퍼짐 정도 수정)
-            float spread = 0.05f; 
-            float angle = (i < 2) ? (spread * (2 - i)) : (-spread * (i - 1));
-            Vector2 dir = isFocused ? Vector2.right : new Vector2(1f, angle).normalized;
-            
-            bRb.velocity = dir * bulletSpeed;
+            if (bullet != null)
+            {
+                // 방향 계산 (기존 코드와 동일)
+                float spread = 0.05f; 
+                float angle = (i < 2) ? (spread * (2 - i)) : (-spread * (i - 1));
+                Vector2 dir = isFocused ? Vector2.right : new Vector2(1f, angle).normalized;
+                
+                // 2. Rigidbody 조작 대신 Bullet의 Setup() 함수를 호출!
+                Bullet b = bullet.GetComponent<Bullet>();
+                if (b != null)
+                {
+                    b.poolIndex = playerBulletPoolIndex; // 풀 인덱스 기억하기
+                    b.Setup(dir, bulletSpeed);           // 회전 및 속도 세팅 실행!
+                }
+            }
         }
     }
-
     private IEnumerator ShootLaser()
     {
         isLaserActive = true;

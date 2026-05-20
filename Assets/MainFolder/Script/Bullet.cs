@@ -7,7 +7,14 @@ public class Bullet : MonoBehaviour
     private Vector2 direction;
     private float speed;
     public int poolIndex;
+    
+    [Header("Sprite Settings")]
+    [Tooltip("이미지가 아래를 향하면 90, 위를 향하면 -90을 입력하세요.")]
+    public float rotationOffset = 90f;
 
+    [Header("Stats")]
+    public float damage = 10f;
+    
     [Header("Upgraded Features")]
     public float lifetime = 5f; // 총알의 최대 수명 (화면 안에 멈춰있는 총알 방지)
     private float currentLifetime;
@@ -18,10 +25,8 @@ public class Bullet : MonoBehaviour
         speed = spd;
         currentLifetime = lifetime; // 태어날 때 수명 초기화
 
-        // [핵심 업그레이드] 총알이 날아가는 방향으로 이미지(Sprite)를 회전시킵니다.
-        // 뾰족한 총알이나 화살표 총알이 엉뚱한 곳을 보며 날아가는 것을 방지합니다.
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        transform.rotation = Quaternion.Euler(0, 0, angle + rotationOffset);
     }
 
     void Update()
