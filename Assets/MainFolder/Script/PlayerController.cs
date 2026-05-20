@@ -87,8 +87,6 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("EnemyBullet") && !isInvincible)
         {
             LoseLife();
-            // 탄막 파괴
-            Destroy(other.gameObject); 
         }
     }
 

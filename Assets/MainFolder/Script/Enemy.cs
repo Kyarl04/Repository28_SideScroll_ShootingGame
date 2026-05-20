@@ -17,14 +17,22 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // 1. 태그 확인 (Bullet 태그가 정확히 설정되어 있는지 확인)
         if (other.CompareTag("Bullet"))
         {
-            TakeDamage(10f);
+            TakeDamage(10f); // 데미지 적용
             
-            // 탄환은 풀(Pool)로 반환하거나 삭제
-            // (이미 BulletPooler를 쓴다면 BulletPooler.Instance.ReturnBullet(other.gameObject) 사용)
-            Destroy(other.gameObject); 
+            // [추가된 부분] 총알을 즉시 비활성화(없앰) 처리합니다.
+            Bullet bulletScript = other.GetComponent<Bullet>();
+            if (bulletScript != null)
+            {
+                // BulletPooler를 사용하는 총알이면 풀로 반환
+                BulletPooler.Instance.ReturnBullet(other.gameObject, bulletScript.poolIndex);
+            }
+            else
+            {
+                // 구형 방식(Instantiate)으로 만든 총알이라면 그냥 파괴
+                other.gameObject.SetActive(false); 
+            }
         }
     }
 

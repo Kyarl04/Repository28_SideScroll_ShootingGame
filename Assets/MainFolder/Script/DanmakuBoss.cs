@@ -125,14 +125,17 @@ public class DanmakuBoss : MonoBehaviour
     {
         if (BulletPooler.Instance == null) return;
 
-        // 인덱스를 넘겨서 원하는 총알을 꺼냄!
+        // 인덱스를 넘겨서 원하는 총알을 꺼냄
         GameObject bullet = BulletPooler.Instance.GetBullet(prefabIndex, transform.position, Quaternion.identity);
         
         if (bullet != null)
         {
-            // 꺼낸 총알에게 "넌 몇번 풀 출신이야" 라고 알려줌
-            bullet.GetComponent<Bullet>().poolIndex = prefabIndex;
-            bullet.GetComponent<Rigidbody2D>().velocity = dir * speed;
+            Bullet b = bullet.GetComponent<Bullet>();
+            b.poolIndex = prefabIndex;
+            
+            // [핵심 해결] Rigidbody2D.velocity 대신 업그레이드된 Setup() 함수를 호출합니다!
+            // 이 함수가 불려야 총알의 방향, 속도, 수명(Lifetime)이 정상적으로 세팅됩니다.
+            b.Setup(dir, speed);
         }
     }
 }

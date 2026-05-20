@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 8882644062432916834}
   - component: {fileID: 4859610688620759255}
   - component: {fileID: 6419596022339478068}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: etama_35
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -47,7 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9137955cb77474cb0ab903fdb6576f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolIndex: 1
+  poolIndex: 0
+  lifetime: 5
 --- !u!212 &8882644062432916834
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -131,7 +132,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -150,9 +151,9 @@ GameObject:
   - component: {fileID: 6652327999558081125}
   - component: {fileID: 6445448880644977861}
   - component: {fileID: 6216062686915876043}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bullet_2_34
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -184,7 +185,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9137955cb77474cb0ab903fdb6576f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolIndex: 9
+  poolIndex: 8
+  lifetime: 5
 --- !u!212 &6652327999558081125
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -268,7 +270,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -287,9 +289,9 @@ GameObject:
   - component: {fileID: 681045987740434960}
   - component: {fileID: 604209570197800536}
   - component: {fileID: 3752408789943191225}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: etama_169
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -321,7 +323,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9137955cb77474cb0ab903fdb6576f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolIndex: 7
+  poolIndex: 6
+  lifetime: 5
 --- !u!212 &681045987740434960
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -405,7 +408,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -424,9 +427,9 @@ GameObject:
   - component: {fileID: 7679589422634355023}
   - component: {fileID: 7796801421377348461}
   - component: {fileID: 1159943975488973851}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: etama_165
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -458,7 +461,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9137955cb77474cb0ab903fdb6576f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolIndex: 6
+  poolIndex: 5
+  lifetime: 5
 --- !u!212 &7679589422634355023
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -542,7 +546,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -561,9 +565,9 @@ GameObject:
   - component: {fileID: 5187503944123907614}
   - component: {fileID: 4949507252063606606}
   - component: {fileID: 7932457410442804654}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: etama_40
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -595,7 +599,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9137955cb77474cb0ab903fdb6576f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolIndex: 3
+  poolIndex: 2
+  lifetime: 5
 --- !u!212 &5187503944123907614
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -679,7 +684,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -698,9 +703,9 @@ GameObject:
   - component: {fileID: 6720122122029638757}
   - component: {fileID: 1939183202490215646}
   - component: {fileID: 8792258889627108041}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: etama_37
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -732,7 +737,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9137955cb77474cb0ab903fdb6576f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolIndex: 2
+  poolIndex: 1
+  lifetime: 5
 --- !u!212 &6720122122029638757
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -816,7 +822,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -835,9 +841,9 @@ GameObject:
   - component: {fileID: 8930910047940829074}
   - component: {fileID: 1945283646306414653}
   - component: {fileID: 706559141727890223}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bullet_2_35
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -869,7 +875,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9137955cb77474cb0ab903fdb6576f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolIndex: 10
+  poolIndex: 9
+  lifetime: 5
 --- !u!212 &8930910047940829074
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -953,7 +960,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -972,9 +979,9 @@ GameObject:
   - component: {fileID: 2919096412530583922}
   - component: {fileID: 4864944351183566720}
   - component: {fileID: 2151773137166717876}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bullet_9_3_01
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1006,7 +1013,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9137955cb77474cb0ab903fdb6576f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolIndex: 13
+  poolIndex: 12
+  lifetime: 5
 --- !u!212 &2919096412530583922
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1090,7 +1098,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1106,9 +1114,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3915679436380727690}
   - component: {fileID: 6657731728971673987}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ShotPoolParent
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1155,18 +1163,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefabs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1094982810694001058}
+  - {fileID: 2615062612863294969}
+  - {fileID: 2423244098657529053}
+  - {fileID: 7267327435251155710}
+  - {fileID: 5241340731062908706}
+  - {fileID: 1839827297876529948}
+  - {fileID: 1797740682863242648}
+  - {fileID: 5497620126759918967}
+  - {fileID: 1141053409770142959}
+  - {fileID: 3188420135641066534}
+  - {fileID: 6749237479056171434}
+  - {fileID: 7938053114644744891}
+  - {fileID: 3688153377813801730}
+  - {fileID: 6618718363758063428}
   poolSizePerPrefab: 100
 --- !u!1 &5241340731062908706
 GameObject:
@@ -1181,9 +1191,9 @@ GameObject:
   - component: {fileID: 8686470515338102062}
   - component: {fileID: 2529551050867115574}
   - component: {fileID: 5251643126670270750}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: etama_163
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1215,7 +1225,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9137955cb77474cb0ab903fdb6576f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolIndex: 5
+  poolIndex: 4
+  lifetime: 5
 --- !u!212 &8686470515338102062
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1299,7 +1310,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1318,9 +1329,9 @@ GameObject:
   - component: {fileID: 1690390591229682291}
   - component: {fileID: 9161047603128065580}
   - component: {fileID: 5109279937223640669}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: etama_172
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1352,7 +1363,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9137955cb77474cb0ab903fdb6576f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolIndex: 8
+  poolIndex: 7
+  lifetime: 5
 --- !u!212 &1690390591229682291
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1436,7 +1448,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1455,9 +1467,9 @@ GameObject:
   - component: {fileID: 1598419823210986524}
   - component: {fileID: 6585648258426581184}
   - component: {fileID: 13522494942976165}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bullet_9_3_04
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1489,7 +1501,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9137955cb77474cb0ab903fdb6576f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolIndex: 14
+  poolIndex: 13
+  lifetime: 5
 --- !u!212 &1598419823210986524
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1573,7 +1586,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1592,9 +1605,9 @@ GameObject:
   - component: {fileID: 8034305913434983692}
   - component: {fileID: 4027698280726543872}
   - component: {fileID: 3958997030994506157}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bullet_2_37
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1626,7 +1639,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9137955cb77474cb0ab903fdb6576f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolIndex: 11
+  poolIndex: 10
+  lifetime: 5
 --- !u!212 &8034305913434983692
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1710,7 +1724,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1729,9 +1743,9 @@ GameObject:
   - component: {fileID: 7214869061203133564}
   - component: {fileID: 8910740648945972923}
   - component: {fileID: 6674631449227766268}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: etama_44
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1763,7 +1777,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9137955cb77474cb0ab903fdb6576f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolIndex: 4
+  poolIndex: 3
+  lifetime: 5
 --- !u!212 &7214869061203133564
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1847,7 +1862,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1866,9 +1881,9 @@ GameObject:
   - component: {fileID: 2023135677484865723}
   - component: {fileID: 4279202439742526902}
   - component: {fileID: 6826475953403656858}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bullet_2_38
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1900,7 +1915,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9137955cb77474cb0ab903fdb6576f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolIndex: 12
+  poolIndex: 11
+  lifetime: 5
 --- !u!212 &2023135677484865723
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1984,7 +2000,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

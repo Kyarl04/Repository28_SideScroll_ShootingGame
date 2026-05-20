@@ -8,21 +8,39 @@ public class Bullet : MonoBehaviour
     private float speed;
     public int poolIndex;
 
+    [Header("Upgraded Features")]
+    public float lifetime = 5f; // 총알의 최대 수명 (화면 안에 멈춰있는 총알 방지)
+    private float currentLifetime;
+
     public void Setup(Vector2 dir, float spd)
     {
-        direction = dir;
+        direction = dir.normalized;
         speed = spd;
+        currentLifetime = lifetime; // 태어날 때 수명 초기화
+
+        // [핵심 업그레이드] 총알이 날아가는 방향으로 이미지(Sprite)를 회전시킵니다.
+        // 뾰족한 총알이나 화살표 총알이 엉뚱한 곳을 보며 날아가는 것을 방지합니다.
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     void Update()
     {
-        transform.Translate(direction * speed * Time.deltaTime);
+        // Space.World를 추가하여, 회전된 상태라도 절대 좌표 기준으로 똑바로 날아가게 합니다.
+        transform.Translate(direction * speed * Time.deltaTime, Space.World);
         
-        // 화면 밖으로 나가면 풀로 반환
+        // 1. 화면 밖으로 나가면 풀로 반환
         if (IsOffScreen())
         {
             BulletPooler.Instance.ReturnBullet(gameObject, poolIndex);
-        }  
+        }
+        
+        // 2. 수명(Lifetime)이 다 되어도 풀로 반환 (Shot.cs에서 가져온 기능)
+        currentLifetime -= Time.deltaTime;
+        if (currentLifetime <= 0)
+        {
+            BulletPooler.Instance.ReturnBullet(gameObject, poolIndex);
+        }
     }
 
     private bool IsOffScreen()
@@ -34,10 +52,14 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // 적과 충돌했는지 확인
+        // 적과 충돌했는지 확인 (플레이어 총알일 경우)
         if (other.CompareTag("Enemy"))
         {
-            // 탄환 비활성화 및 풀로 반환할 때, poolIndex를 함께 넘겨줍니다!
+            BulletPooler.Instance.ReturnBullet(gameObject, poolIndex); 
+        }
+        // 플레이어와 충돌했는지 확인 (적 총알일 경우) - 태그 이름은 프로젝트에 맞게 수정하세요
+        else if (other.CompareTag("Player"))
+        {
             BulletPooler.Instance.ReturnBullet(gameObject, poolIndex); 
         }
     }
