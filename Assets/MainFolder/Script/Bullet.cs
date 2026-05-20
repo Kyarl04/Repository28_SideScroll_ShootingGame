@@ -6,6 +6,7 @@ public class Bullet : MonoBehaviour
 {
     private Vector2 direction;
     private float speed;
+    public int poolIndex;
 
     public void Setup(Vector2 dir, float spd)
     {
@@ -18,8 +19,10 @@ public class Bullet : MonoBehaviour
         transform.Translate(direction * speed * Time.deltaTime);
         
         // 화면 밖으로 나가면 풀로 반환
-        if (IsOffScreen()) 
-            BulletPooler.Instance.ReturnBullet(gameObject);
+        if (IsOffScreen())
+        {
+            BulletPooler.Instance.ReturnBullet(gameObject, poolIndex);
+        }  
     }
 
     private bool IsOffScreen()
@@ -34,8 +37,8 @@ public class Bullet : MonoBehaviour
         // 적과 충돌했는지 확인
         if (other.CompareTag("Enemy"))
         {
-            // 탄환 비활성화 및 풀로 반환
-            BulletPooler.Instance.ReturnBullet(gameObject);
+            // 탄환 비활성화 및 풀로 반환할 때, poolIndex를 함께 넘겨줍니다!
+            BulletPooler.Instance.ReturnBullet(gameObject, poolIndex); 
         }
     }
 }
