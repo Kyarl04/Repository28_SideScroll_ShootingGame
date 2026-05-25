@@ -67,6 +67,10 @@ public class BulletPooler : MonoBehaviour
     public void ReturnBullet(GameObject obj, int index)
     {
         if (obj == null) return;
+        
+        // [핵심 해결책] 이미 비활성화된(풀에 들어간) 총알은 두 번 받지 않습니다.
+        if (!obj.activeSelf) return; 
+
         if (index < 0 || index >= bulletPools.Count)
         {
             Destroy(obj); 

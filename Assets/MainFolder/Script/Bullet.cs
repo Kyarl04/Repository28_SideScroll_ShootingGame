@@ -31,20 +31,19 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        // Space.World를 추가하여, 회전된 상태라도 절대 좌표 기준으로 똑바로 날아가게 합니다.
         transform.Translate(direction * speed * Time.deltaTime, Space.World);
         
-        // 1. 화면 밖으로 나가면 풀로 반환
         if (IsOffScreen())
         {
             BulletPooler.Instance.ReturnBullet(gameObject, poolIndex);
+            return; // [추가] 반환 후 아래 코드가 실행되지 않도록 즉시 멈춤!
         }
         
-        // 2. 수명(Lifetime)이 다 되어도 풀로 반환 (Shot.cs에서 가져온 기능)
         currentLifetime -= Time.deltaTime;
         if (currentLifetime <= 0)
         {
             BulletPooler.Instance.ReturnBullet(gameObject, poolIndex);
+            return; // [추가] 반환 후 즉시 멈춤!
         }
     }
 

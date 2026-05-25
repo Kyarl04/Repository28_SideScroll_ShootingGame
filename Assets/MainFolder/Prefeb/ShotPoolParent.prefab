@@ -6230,7 +6230,7 @@ MonoBehaviour:
   - {fileID: 3688153377813801730}
   - {fileID: 6618718363758063428}
   - {fileID: 1708832953107543197}
-  poolSizePerBullet: 250
+  poolSizePerBullet: 400
   effectPrefabs:
   - {fileID: 1542379161811214583}
   poolSizePerEffect: 30
