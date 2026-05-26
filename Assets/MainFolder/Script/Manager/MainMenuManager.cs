@@ -12,12 +12,16 @@ public class MainMenuManager : MonoBehaviour
     {
         Debug.Log("게임을 시작합니다!");
         // 지정된 이름의 씬을 불러옵니다.
+        SoundManager.Instance.PlayButtonClick(); // 버튼 소리 재생
+        SoundManager.Instance.PlayGameBGM();     // 게임 씬 BGM으로 교체
         SceneManager.LoadScene(gameSceneName);
     }
 
     // '게임 종료' 버튼을 눌렀을 때 실행될 함수
     public void ExitGame()
     {
+        SoundManager.Instance.PlayButtonClick();
+        SoundManager.Instance.PlayMenuBGM();     // 메뉴 씬 BGM으로 교체
         Debug.Log("게임을 종료합니다!");
 
         // 1. 유니티 에디터 환경에서 테스트할 때 멈추는 기능

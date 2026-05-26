@@ -49,6 +49,8 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Bullet"))
         {
+            SoundManager.Instance.PlayPlayerBulletHit();
+            
             Bullet bulletScript = other.GetComponent<Bullet>();
             
             if (bulletScript != null)

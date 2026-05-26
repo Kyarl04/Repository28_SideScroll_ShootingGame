@@ -12,7 +12,10 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput;
     private bool isFocused;
     private Vector2 minBound, maxBound;
-    private PlayerWeapon weapon; // 무기 스크립트 참조
+    private PlayerWeapon weapon; 
+
+    [Header("Animation")]
+    public Animator anim;
 
     [Header("HP")]    
     public int maxLives = 3;
@@ -26,6 +29,11 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        if (anim == null) 
+        {
+            anim = GetComponent<Animator>();
+        }
+        
         currentLives = maxLives;
         UpdateHeartUI();
     }
@@ -33,19 +41,31 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        weapon = GetComponent<PlayerWeapon>(); // 같은 오브젝트의 무기 스크립트를 가져옴
+        weapon = GetComponent<PlayerWeapon>(); 
         SetScreenBoundaries();
     }
 
     private void Update()
     {
-        // 1. 이동 입력
-        moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        // 1. 이동 입력 (깃허브 방식 적용)
+        float inputX = Input.GetAxisRaw("Horizontal");
+        float inputY = Input.GetAxisRaw("Vertical");
+        moveInput = new Vector2(inputX, inputY).normalized;
+        
         isFocused = Input.GetKey(KeyCode.LeftShift);
 
         // 2. 무기 명령
         if (Input.GetKey(KeyCode.Z)) weapon.TryFire();
         if (Input.GetKeyDown(KeyCode.X)) weapon.TryActivateLaser();
+
+        // ==========================================
+        // 3. 깃허브 방식 애니메이션 연동
+        // ==========================================
+        if (anim != null)
+        {
+            // 깃허브 원본처럼 'Horizontal' 파라미터에 int 값(-1, 0, 1)을 넘겨줍니다.
+            anim.SetInteger("Horizontal", (int)inputX);
+        }
     }
 
     private void FixedUpdate()
@@ -57,16 +77,23 @@ public class PlayerController : MonoBehaviour
         rb.MovePosition(nextPos);
     }
 
-    //HP
     public void LoseLife()
     {
+        SoundManager.Instance.PlayPlayerHit(); // 플레이어 피격음 추가
+        
         currentLives--;
         UpdateHeartUI();
 
+        // 깃허브 원본처럼 피격 시 'Hit' 애니메이션을 재생합니다.
+        if (anim != null)
+        {
+            anim.SetTrigger("Hit");
+        }
+
         if (currentLives <= 0) 
         {
-            // 게임 오버 처리
             Debug.Log("Game Over");
+            gameObject.SetActive(false); // 깃허브 방식: 죽으면 플레이어 숨기기
         }
         else 
         {
@@ -90,25 +117,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //Blink Effect
     private IEnumerator StartInvincibility()
     {
         isInvincible = true;
         
-        // 깜빡임 효과 (0.1초 간격으로 투명도 조절)
         float blinkInterval = 0.1f;
         float timer = 0f;
 
         while (timer < invincibilityDuration)
         {
-            spriteRenderer.color = new Color(1, 1, 1, 0.5f); // 반투명
+            spriteRenderer.color = new Color(1, 1, 1, 0.5f); 
             yield return new WaitForSeconds(blinkInterval);
-            spriteRenderer.color = new Color(1, 1, 1, 1f);   // 불투명
+            spriteRenderer.color = new Color(1, 1, 1, 1f);   
             yield return new WaitForSeconds(blinkInterval);
             timer += blinkInterval * 2;
         }
 
-        spriteRenderer.color = new Color(1, 1, 1, 1f); // 원상복구
+        spriteRenderer.color = new Color(1, 1, 1, 1f); 
         isInvincible = false;
     }
 
@@ -118,6 +143,4 @@ public class PlayerController : MonoBehaviour
         minBound = cam.ViewportToWorldPoint(new Vector2(0, 0)) + new Vector3(padding, padding, 0);
         maxBound = cam.ViewportToWorldPoint(new Vector2(1, 1)) - new Vector3(padding, padding, 0);
     }
-
-
 }

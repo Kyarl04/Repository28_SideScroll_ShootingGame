@@ -24,6 +24,7 @@ public class LaserHitbox : MonoBehaviour
     // 스크립트가 꺼질 때(레이저 발사 종료 시) 붙어있던 이펙트들을 모두 회수
     private void OnDisable()
     {
+        if (SoundManager.Instance != null) SoundManager.Instance.StopLaserHitSFX(); // 안전장치
         RemoveAllEffects();
     }
 
@@ -54,6 +55,8 @@ public class LaserHitbox : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
+            SoundManager.Instance.StartLaserHitSFX();
+
             Transform enemyTrans = other.transform;
 
             // 이미 이펙트가 붙어있는 적이라면 무시
@@ -86,6 +89,7 @@ public class LaserHitbox : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
+
             Transform enemyTrans = other.transform;
 
             // 이 적에게 붙어있는 이펙트를 찾아서 회수합니다.

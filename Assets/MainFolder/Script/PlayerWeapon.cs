@@ -41,6 +41,8 @@ public class PlayerWeapon : MonoBehaviour
 
     public void TryFire()
     {
+        if (isLaserActive) return;
+
         if (Time.time >= nextFireTime)
         {
             FireBullets();
@@ -71,6 +73,8 @@ public class PlayerWeapon : MonoBehaviour
 
     private void FireBullets()
     {
+        SoundManager.Instance.PlayPlayerShoot();
+
         bool isFocused = Input.GetKey(KeyCode.LeftShift);
         
         for (int i = 0; i < firePoints.Length; i++)
@@ -97,6 +101,8 @@ public class PlayerWeapon : MonoBehaviour
     }
     private IEnumerator ShootLaser()
     {
+        SoundManager.Instance.PlayPlayerLaserFire();
+        
         isLaserActive = true;
         isInvincible = true;
         lastLaserTime = Time.time;
