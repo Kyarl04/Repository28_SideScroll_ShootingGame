@@ -7,14 +7,8 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/MainFolder/Scenes/MainMenu.unity
-    guid: 6facf010a34dc7d47a6a1e638b2a8fca
+    guid: b3210387b2e574843911213df4b8a1a4
   - enabled: 1
-    path: Assets/MainFolder/Scenes/StageSelect.unity
-    guid: 0615e2a62f7caab4a844d5b1cb1f3f54
-  - enabled: 1
-    path: Assets/SubFolder/Assets/Scenes/Config.unity
-    guid: c0685751bd9359e49be38c9ac6276b6c
-  - enabled: 1
-    path: Assets/SubFolder/Assets/Scenes/Koishi.unity
-    guid: 1626ab391435bdc48aab426ad575dc24
+    path: Assets/MainFolder/Scenes/GameScean.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects: {}

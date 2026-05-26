@@ -19,6 +19,11 @@ public class PlayerWeapon : MonoBehaviour
     public float laserDuration = 1.5f;
     public float laserCooldown = 3.0f;
 
+    [Header("Bomb (Laser) UI")]
+    public int maxLasers = 3;           // 최대 폭탄(레이저) 개수
+    private int currentLasers;          // 현재 남은 개수
+    public GameObject[] laserUIs;       // 인스펙터에서 UI 이미지들을 배열로 넣습니다.
+
     // 상태 변수
     private float nextFireTime = 0f;
     private float lastLaserTime = -999f;
@@ -26,6 +31,13 @@ public class PlayerWeapon : MonoBehaviour
     private bool isLaserActive = false;
 
     // --- 외부(PlayerController)에서 호출하는 함수들 ---
+
+    private void Start()
+    {
+        // 시작 시 레이저 개수 초기화 및 UI 갱신
+        currentLasers = maxLasers;
+        UpdateLaserUI();
+    }
 
     public void TryFire()
     {
@@ -38,11 +50,22 @@ public class PlayerWeapon : MonoBehaviour
 
     public void TryActivateLaser()
     {
-        if (Time.time >= lastLaserTime + laserCooldown && !isLaserActive)
+        if (Time.time >= lastLaserTime + laserCooldown && !isLaserActive && currentLasers > 0)
         {
+            currentLasers--;     // 개수 1 감소
+            UpdateLaserUI();     // UI 즉시 갱신 (이미지 1개 꺼짐)
             StartCoroutine(ShootLaser());
         }
     }
+
+    private void UpdateLaserUI()
+    {
+        for (int i = 0; i < laserUIs.Length; i++)
+        {
+            laserUIs[i].SetActive(i < currentLasers);
+        }
+    }
+
 
     // --- 내부 동작 로직 ---
 
