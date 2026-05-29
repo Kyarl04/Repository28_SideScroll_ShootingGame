@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shotData: {fileID: 11400000, guid: d0d334715e6d96a4586b8fa601d78dc1, type: 2}
   startDelay: 0
-  interval: 0.1
+  interval: 0.7
   fireData: {fileID: 11400000, guid: 25d3015411fc2a14abc201a20db6cecd, type: 2}
   fireOffset:
-    cycle: 0
+    cycle: 24
     startCycleIndex: 0
-    range: 360
-    type: 1
+    range: 0
+    type: 0
     reciprocate: 0

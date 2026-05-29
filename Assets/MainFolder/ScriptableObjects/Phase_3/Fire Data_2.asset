@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8ba36e8c0c15c048ae08b31a1a59083, type: 3}
-  m_Name: Fire Data_1
+  m_Name: Fire Data_2
   m_EditorClassIdentifier: 
-  startDir: {x: -1, y: 0, z: 0}
+  startDir: {x: -1, y: 1, z: 0}
   directionType: 2
   startAngle: 0
   startDistance: 0.5
@@ -36,6 +36,6 @@ MonoBehaviour:
     num: 1
     interval: 0.03
     deltaDistance: 0
-    deltaAngle: 3
+    deltaAngle: 5
     posDeltaAngle: 0
     posDeltaDistance: 0

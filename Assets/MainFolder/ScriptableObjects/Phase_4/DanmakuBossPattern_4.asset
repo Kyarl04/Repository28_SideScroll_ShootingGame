@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dd43c9a87219c3145a431bde1cc9746c, type: 3}
-  m_Name: DanmakuBossPattern_1
+  m_Name: DanmakuBossPattern_4
   m_EditorClassIdentifier: 
-  danmakuName: "1\uD398\uC774\uC988"
+  danmakuName: Phase_4
   data:
-  - {fileID: 11400000, guid: 31b69ff40e0a2e64ab56ee698faaa68d, type: 2}
+  - {fileID: 11400000, guid: 9a02597d2a5f17949b641bfd85a4bbda, type: 2}
   type: 0
   animation: 0
   move:
@@ -28,4 +28,4 @@ MonoBehaviour:
     interval: 2.5
     delay: 0.5
     duration: 1
-  hp: 3000
+  hp: 400

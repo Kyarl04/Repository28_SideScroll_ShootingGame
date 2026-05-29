@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53f28bb6f08d82e41a68ab9a62dcb00f, type: 3}
-  m_Name: Barrage_1
+  m_Name: Barrage_2
   m_EditorClassIdentifier: 
-  shotData: {fileID: 11400000, guid: d0d334715e6d96a4586b8fa601d78dc1, type: 2}
-  startDelay: 0
-  interval: 0.1
-  fireData: {fileID: 11400000, guid: 25d3015411fc2a14abc201a20db6cecd, type: 2}
+  shotData: {fileID: 11400000, guid: 329eae7c65444ac469ec0722b31365da, type: 2}
+  startDelay: 2
+  interval: 1
+  fireData: {fileID: 11400000, guid: f4f0bc2f4a2db0b49bf1d2fac065d722, type: 2}
   fireOffset:
-    cycle: 0
+    cycle: 6
     startCycleIndex: 0
-    range: 360
+    range: 0
     type: 1
-    reciprocate: 0
+    reciprocate: 1

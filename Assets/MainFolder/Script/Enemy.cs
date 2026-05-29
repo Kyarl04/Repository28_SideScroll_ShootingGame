@@ -84,6 +84,12 @@ public class Enemy : MonoBehaviour
             if (bossScript != null) bossScript.OnPhaseDefeated();
             else Die();
         }
+        
+        DanmakuBoss bossPhaseManager = GetComponent<DanmakuBoss>();
+        if (bossPhaseManager != null)
+        {
+            bossPhaseManager.BossTakeDamage(damage);
+        }
     }
 
     private void Die()
