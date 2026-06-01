@@ -58,12 +58,9 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.Z)) weapon.TryFire();
         if (Input.GetKeyDown(KeyCode.X)) weapon.TryActivateLaser();
 
-        // ==========================================
         // 3. 깃허브 방식 애니메이션 연동
-        // ==========================================
         if (anim != null)
         {
-            // 깃허브 원본처럼 'Horizontal' 파라미터에 int 값(-1, 0, 1)을 넘겨줍니다.
             anim.SetInteger("Horizontal", (int)inputX);
         }
     }
@@ -79,21 +76,19 @@ public class PlayerController : MonoBehaviour
 
     public void LoseLife()
     {
-        SoundManager.Instance.PlayPlayerHit(); // 플레이어 피격음 추가
+        if (SoundManager.Instance != null) SoundManager.Instance.PlayPlayerHit(); 
         
         currentLives--;
         UpdateHeartUI();
 
-        // 깃허브 원본처럼 피격 시 'Hit' 애니메이션을 재생합니다.
-        if (anim != null)
-        {
-            anim.SetTrigger("Hit");
-        }
+        if (anim != null) anim.SetTrigger("Hit");
 
         if (currentLives <= 0) 
         {
-            Debug.Log("Game Over");
-            gameObject.SetActive(false); // 깃허브 방식: 죽으면 플레이어 숨기기
+            gameObject.SetActive(false); // 플레이어 숨기기
+            
+            // [추가된 부분] 게임 오버 패널 띄우기
+            if (GameManager.Instance != null) GameManager.Instance.ShowGameOver();
         }
         else 
         {
@@ -117,6 +112,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // ==========================================
+    // [핵심 변경] 깜빡임 연출 중에도 옵션 매니저의 투명도를 따르도록 수정
+    // ==========================================
     private IEnumerator StartInvincibility()
     {
         isInvincible = true;
@@ -126,14 +124,26 @@ public class PlayerController : MonoBehaviour
 
         while (timer < invincibilityDuration)
         {
-            spriteRenderer.color = new Color(1, 1, 1, 0.5f); 
+            // 실시간으로 옵션창에 설정된 투명도 값을 가져옵니다. (매니저가 없으면 기본값 1f)
+            float targetAlpha = GameOptionManager.Instance != null ? GameOptionManager.Instance.CurrentPlayerAlpha : 1f;
+
+            // 1. 설정된 투명도보다 더 옅게 만들어서 깜빡이는 효과 (예: 설정값의 30%)
+            spriteRenderer.color = new Color(1, 1, 1, targetAlpha * 0.3f); 
             yield return new WaitForSeconds(blinkInterval);
-            spriteRenderer.color = new Color(1, 1, 1, 1f);   
+            
+            // 2. 다시 설정된 투명도로 복구
+            // (도중에 유저가 ESC를 누르고 슬라이더를 바꿨을 수도 있으니 한번 더 값을 가져옵니다)
+            targetAlpha = GameOptionManager.Instance != null ? GameOptionManager.Instance.CurrentPlayerAlpha : 1f;
+            spriteRenderer.color = new Color(1, 1, 1, targetAlpha);   
             yield return new WaitForSeconds(blinkInterval);
+            
             timer += blinkInterval * 2;
         }
 
-        spriteRenderer.color = new Color(1, 1, 1, 1f); 
+        // 루프가 끝난 뒤, 완전히 옵션 매니저의 투명도로 최종 복구!
+        float finalAlpha = GameOptionManager.Instance != null ? GameOptionManager.Instance.CurrentPlayerAlpha : 1f;
+        spriteRenderer.color = new Color(1, 1, 1, finalAlpha); 
+        
         isInvincible = false;
     }
 

@@ -139,6 +139,10 @@ public class DanmakuBoss : MonoBehaviour
                 spellNameText.text = "GAME CLEAR!";
                 spellNameText.gameObject.SetActive(true);
             }
+            
+            // [추가된 부분] 게임 클리어 패널 띄우기
+            if (GameManager.Instance != null) GameManager.Instance.ShowGameClear();
+
             Debug.Log("보스 최종 클리어!");
             Destroy(gameObject);
         }
