@@ -52,13 +52,15 @@ public class DanmakuBoss : MonoBehaviour
 
     private IEnumerator StartPhaseRoutine(int index)
     {
-        isTransitioning = false;
+        // 보스가 등장하거나 체력바가 차오르는 동안 무적(isTransitioning) 상태로 둡니다.
+        isTransitioning = true; 
         BossPhase currentPhase = phases[index];
 
         currentPhaseHP = currentPhase.phaseHP;
 
+        // UI 켜기 및 체력바 0으로 초기화
         if (hpBarContainer != null) hpBarContainer.SetActive(true);
-        if (hpBarFill != null) hpBarFill.fillAmount = 1f;
+        if (hpBarFill != null) hpBarFill.fillAmount = 0f; 
 
         if (spellNameText != null && currentPhase.pattern != null)
         {
@@ -66,7 +68,35 @@ public class DanmakuBoss : MonoBehaviour
             spellNameText.gameObject.SetActive(true);
         }
 
+        // =========================================================
+        // [핵심 변경] 게임 시작(1페이즈) 시 등장 대기 시간 추가
+        // =========================================================
+        if (index == 0)
+        {
+            // 보스가 처음 등장할 때(Intro 애니메이션 재생 중) 1.5초 정도 여유롭게 대기합니다.
+            yield return new WaitForSeconds(1.5f);
+        }
+
+        // 모든 페이즈 공통: 체력바가 0에서 1로 차오르는 연출 (1초 소요)
+        if (hpBarFill != null)
+        {
+            float fillDuration = 1.0f; 
+            float timer = 0f;
+            
+            while (timer < fillDuration)
+            {
+                timer += Time.deltaTime;
+                hpBarFill.fillAmount = Mathf.Lerp(0f, 1f, timer / fillDuration);
+                yield return null; 
+            }
+            hpBarFill.fillAmount = 1f; // 오차 보정용 100% 꽉 채우기
+        }
+
+        // 체력이 다 차면 스펠카드 선언 애니메이션 재생
         if (anim != null) anim.SetTrigger("SpellCard");
+
+        // 전투 시작 (무적 해제, 이제부터 데미지가 들어갑니다!)
+        isTransitioning = false; 
 
         if (currentPhase.pattern != null && currentPhase.pattern.move != null)
         {
@@ -106,7 +136,9 @@ public class DanmakuBoss : MonoBehaviour
         StopAllCoroutines(); 
         transform.DOKill();  
         
-        StartCoroutine(PhaseTransitionRoutine()); 
+        ClearAllBullets(); 
+        
+        StartCoroutine(PhaseTransitionRoutine());
     }
 
     private IEnumerator PhaseTransitionRoutine()
@@ -140,7 +172,7 @@ public class DanmakuBoss : MonoBehaviour
                 spellNameText.gameObject.SetActive(true);
             }
             
-            // [추가된 부분] 게임 클리어 패널 띄우기
+            // 게임 클리어 매니저 호출
             if (GameManager.Instance != null) GameManager.Instance.ShowGameClear();
 
             Debug.Log("보스 최종 클리어!");
@@ -171,6 +203,29 @@ public class DanmakuBoss : MonoBehaviour
         }
     }
 
+    private void ClearAllBullets()
+    {
+        // 태그 대신 스크립트를 직접 찾아 '진짜 총알(최상위 오브젝트)'만 확실하게 골라냅니다.
+        Bullet[] activeBullets = FindObjectsOfType<Bullet>();
+        
+        foreach (Bullet b in activeBullets)
+        {
+            // 현재 화면에 켜져있고, 보스가 쏜 총알(EnemyBullet)인 것만 회수합니다.
+            if (b.gameObject.activeSelf && b.gameObject.CompareTag("EnemyBullet"))
+            {
+                if (BulletPooler.Instance != null)
+                {
+                    BulletPooler.Instance.ReturnBullet(b.gameObject, b.poolIndex);
+                }
+                else
+                {
+                    // 풀러가 없을 경우에만 안전하게 끕니다.
+                    b.gameObject.SetActive(false);
+                }
+            }
+        }
+    }
+
     private void MoveTo(Vector3 targetPos, float duration)
     {
         if (transform.position == targetPos) return;
@@ -196,9 +251,6 @@ public class DanmakuBoss : MonoBehaviour
         yield return null;
     }
 
-    // =========================================================
-    // [핵심 변경] 회전 및 패턴 루프 로직이 완벽하게 구현된 부분입니다!
-    // =========================================================
     private IEnumerator FireBarrageRoutine(BarrageData barrage)
     {
         yield return new WaitForSeconds(barrage.startDelay);
@@ -208,7 +260,6 @@ public class DanmakuBoss : MonoBehaviour
         {
             float deltaStartAngle = 0f;
 
-            // 1. Barrage Offset 계산 (와이퍼처럼 왔다갔다 하거나 서서히 각도가 틀어지는 효과)
             if (barrage.fireOffset != null && barrage.fireOffset.type != OffsetType.None && barrage.fireOffset.cycle > 0)
             {
                 int cycleIndex = counter % barrage.fireOffset.cycle;
@@ -229,7 +280,6 @@ public class DanmakuBoss : MonoBehaviour
                 }
             }
 
-            // 단일 발사가 아니라 Group(연사) 처리를 위해 코루틴으로 호출합니다.
             StartCoroutine(FireCoroutine(barrage.fireData, barrage.shotData, deltaStartAngle));
             
             yield return new WaitForSeconds(barrage.interval);
@@ -242,7 +292,6 @@ public class DanmakuBoss : MonoBehaviour
         float currentGroupAngle = 0f;
         int loopNum = (fireData.group != null && fireData.group.num > 0) ? fireData.group.num : 1;
 
-        // 2. Group 설정에 따른 반복 발사 및 각도 변화 (회전하는 탄막의 핵심)
         for (int g = 0; g < loopNum; g++)
         {
             Vector3 centerDir = fireData.startDir;
@@ -251,7 +300,6 @@ public class DanmakuBoss : MonoBehaviour
                 centerDir = (player.position - transform.position).normalized;
             }
 
-            // 시작 각도 + 와이퍼 오프셋 + 그룹 연사 회전각을 모두 합산
             float finalAngle = fireData.startAngle + deltaStartAngle + currentGroupAngle;
             Vector3 finalDir = Quaternion.Euler(0, 0, finalAngle) * centerDir;
             
@@ -290,13 +338,11 @@ public class DanmakuBoss : MonoBehaviour
                 }
             }
 
-            // 다음번 쏠 때 각도를 변경시킴
             if (fireData.group != null)
             {
                 currentGroupAngle += fireData.group.deltaAngle;
             }
 
-            // 간격만큼 대기
             if (fireData.group != null && fireData.group.interval > 0)
             {
                 yield return new WaitForSeconds(fireData.group.interval);
