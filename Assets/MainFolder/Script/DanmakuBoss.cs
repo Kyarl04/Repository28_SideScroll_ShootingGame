@@ -12,7 +12,11 @@ public class BossPhase
     public DanmakuData pattern;
     public float phaseHP = 1000f;
     public GameObject transitionEffect;
-    public Sprite newBackground;
+    public Sprite[] newBackground;
+
+    [Header("Transition Settings")]
+    [Tooltip("이 페이즈로 넘어갈 때 사용할 디졸브 머티리얼 (비워두면 연출 없이 컷 전환)")]
+    public Material customDissolveMaterial;
 }
 
 public class DanmakuBoss : MonoBehaviour
@@ -28,6 +32,15 @@ public class DanmakuBoss : MonoBehaviour
     [Header("Phase Settings")]
     public List<BossPhase> phases;
     public Vector3 centerPosition = new Vector3(0, 3f, 0); 
+
+    [Header("Background Transition")]
+    public Image bgPanelImage; // SpriteRenderer 대신 UI Image(Panel)를 사용합니다.
+    [Tooltip("배경 스크롤을 담당하는 AutoParallaxSTG 오브젝트를 연결할 것")]
+    public AutoParallaxSTG parallaxManager;
+    public string bgDissolveProperty = "_D_Intensity"; 
+    public float bgTransitionDuration = 1.5f;
+
+    private Material bgMaterial; // 배경 머티리얼 인스턴스
     
     private int currentPhaseIndex = 0;
     public bool isTransitioning = false; 
@@ -41,6 +54,18 @@ public class DanmakuBoss : MonoBehaviour
 
         GameObject pObj = GameObject.FindGameObjectWithTag("Player");
         if (pObj != null) player = pObj.transform;
+
+        if (bgPanelImage != null)
+        {
+            bgPanelImage.color = new Color(1, 1, 1, 1);
+            
+            // 시작 머티리얼이 있다면 디졸브 수치를 1(온전한 상태)로 보장
+            if (bgPanelImage.material != null && bgPanelImage.material.HasProperty(bgDissolveProperty))
+            {
+                bgPanelImage.material = new Material(bgPanelImage.material);
+                bgPanelImage.material.SetFloat(bgDissolveProperty, 1f);
+            }
+        }
 
         if (anim != null) anim.SetTrigger("Intro");
 
@@ -156,23 +181,66 @@ public class DanmakuBoss : MonoBehaviour
 
         MoveTo(centerPosition, 1.5f);
 
-        yield return new WaitForSeconds(3.0f);
+        // =========================================================
+        // [수정됨] 머티리얼 선택 및 배경 교체 로직
+        // =========================================================
+        int nextPhaseIndex = currentPhaseIndex + 1;
 
-        currentPhaseIndex++;
-        
-        if (currentPhaseIndex < phases.Count)
+        if (nextPhaseIndex < phases.Count)
         {
+            BossPhase nextPhase = phases[nextPhaseIndex];
+            Sprite[] nextBgs = nextPhase.newBackground;
+            Material transitionMat = nextPhase.customDissolveMaterial; // 인스펙터에서 넣은 머티리얼
+
+            if (bgPanelImage != null)
+            {
+                if (transitionMat != null)
+                {
+                    Material tempMat = new Material(transitionMat);
+                    bgPanelImage.material = tempMat;
+
+                    // 1. 화면 까매짐
+                    yield return tempMat.DOFloat(0f, bgDissolveProperty, bgTransitionDuration).WaitForCompletion();
+
+                    // 2. 까매졌을 때 패럴랙스 매니저에게 여러 장의 이미지를 통째로 넘겨 교체 명령!
+                    if (nextBgs != null && nextBgs.Length > 0 && parallaxManager != null) 
+                    {
+                        parallaxManager.ChangeBackgroundSprites(nextBgs);
+                    }
+
+                    // 3. 화면 밝아짐
+                    yield return tempMat.DOFloat(1f, bgDissolveProperty, bgTransitionDuration).WaitForCompletion();
+                }
+                else
+                {
+                    // 연출 없이 즉시 교체
+                    if (nextBgs != null && nextBgs.Length > 0 && parallaxManager != null) 
+                    {
+                        parallaxManager.ChangeBackgroundSprites(nextBgs);
+                    }
+
+                    if (bgPanelImage.material != null && bgPanelImage.material.HasProperty(bgDissolveProperty))
+                    {
+                        bgPanelImage.material.SetFloat(bgDissolveProperty, 1f);
+                    }
+                    yield return new WaitForSeconds(1.5f);
+                }
+            }
+
+            currentPhaseIndex++;
             StartCoroutine(StartPhaseRoutine(currentPhaseIndex));
         }
         else
         {
+            // 최종 클리어 시 대기
+            yield return new WaitForSeconds(3.0f);
+
             if (spellNameText != null)
             {
                 spellNameText.text = "GAME CLEAR!";
                 spellNameText.gameObject.SetActive(true);
             }
             
-            // 게임 클리어 매니저 호출
             if (GameManager.Instance != null) GameManager.Instance.ShowGameClear();
 
             Debug.Log("보스 최종 클리어!");

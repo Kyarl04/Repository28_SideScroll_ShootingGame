@@ -56,4 +56,25 @@ public class AutoParallaxSTG : MonoBehaviour
             }
         }
     }
+
+    public void ChangeBackgroundSprites(Sprite[] newSprites)
+    {
+        if (newSprites == null || newSprites.Length == 0) return;
+
+        for (int i = 0; i < layers.Length; i++)
+        {
+            // 안전장치: 넣은 이미지 개수보다 레이어가 더 많으면, 마지막 이미지로 채웁니다.
+            Sprite targetSprite = (i < newSprites.Length) ? newSprites[i] : newSprites[newSprites.Length - 1];
+
+            // 해당 레이어 안에 있는 모든 배경 조각(2~3장)의 이미지를 일괄 교체
+            foreach (Transform bg in layers[i].backgrounds)
+            {
+                SpriteRenderer sr = bg.GetComponent<SpriteRenderer>();
+                if (sr != null) sr.sprite = targetSprite;
+
+                UnityEngine.UI.Image img = bg.GetComponent<UnityEngine.UI.Image>();
+                if (img != null) img.sprite = targetSprite;
+            }
+        }
+    }
 }

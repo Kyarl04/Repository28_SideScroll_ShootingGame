@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Shot Data_1
   m_EditorClassIdentifier: 
   prefabIndex: 2
-  lifetime: 0
+  lifetime: 15
   speed:
     value: 6
-    min: 6
-    max: 6
-  deltaSpeed: 0
+    min: 3
+    max: 3
+  deltaSpeed: -2
   angle:
     value: 0
     min: 0

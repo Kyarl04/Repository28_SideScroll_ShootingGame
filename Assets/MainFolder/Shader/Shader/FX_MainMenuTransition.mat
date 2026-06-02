@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FX_Fadeimage
+  m_Name: FX_MainMenuTransition
   m_Shader: {fileID: 4800000, guid: a226cbba48657f640b43731813a6c505, type: 3}
   m_ValidKeywords:
   - _DINTENSITY_CUSTOM2_X_CUSTOM2_OFF

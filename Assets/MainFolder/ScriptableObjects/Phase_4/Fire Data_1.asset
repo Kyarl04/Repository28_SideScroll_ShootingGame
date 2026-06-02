@@ -20,9 +20,9 @@ MonoBehaviour:
   posDir: {x: 0, y: 0, z: 0}
   posStartDistance: 0
   delayOperations: []
-  type: 0
+  type: 1
   sector:
-    deltaAngle: 5
+    deltaAngle: 2
   spray:
     fire:
       value: 0
@@ -33,9 +33,9 @@ MonoBehaviour:
       min: 0
       max: 0
   group:
-    num: 1
-    interval: 0.03
+    num: 3
+    interval: 0.05
     deltaDistance: 0
-    deltaAngle: 3
+    deltaAngle: 0
     posDeltaAngle: 0
     posDeltaDistance: 0

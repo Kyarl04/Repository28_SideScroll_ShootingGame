@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shotData: {fileID: 11400000, guid: 3e50d6c47208d2b4eac775bff4d99d56, type: 2}
   startDelay: 0
-  interval: 0.2
+  interval: 0.5
   fireData: {fileID: 11400000, guid: cf31ddfefc8fc4446ad7b0fb03e5ea25, type: 2}
   fireOffset:
     cycle: 25
