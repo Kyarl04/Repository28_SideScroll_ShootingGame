@@ -7,18 +7,14 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FX_PhaseTransition
-  m_Shader: {fileID: 4800000, guid: a226cbba48657f640b43731813a6c505, type: 3}
-  m_ValidKeywords:
-  - _DINTENSITY_CUSTOM2_X_CUSTOM2_OFF
-  - _DISSOLVE_CUSTOM2_X_CUSTOM2_OFF
-  - _DISSOLVE_DIRECTIONDISSOLVE
-  - _UVMASKDIRECTION_U_POS
+  m_Name: Circle 1
+  m_Shader: {fileID: 200, guid: 0000000000000000f000000000000000, type: 0}
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -40,20 +36,12 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _DissolveTex:
-        m_Texture: {fileID: 2800000, guid: f81f19338ca6e994a92f9ed25daff57b, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Dissolve_Tex:
-        m_Texture: {fileID: 2800000, guid: 4a341af32198854439211b2c407324ff, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 52cb1d7ed20fe844088c052d9baae2eb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -68,49 +56,29 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Tex:
-        m_Texture: {fileID: 2800000, guid: e311d93ac5b63654788d0445fe188005, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - DIntensity: 1
-    - DIntensity2: 1
-    - D_RotateValue: 0
     - _BumpScale: 1
     - _Cutoff: 0.5
-    - _DDirection_Width: 1
-    - _DIntensity: 1
-    - _DIntensity2: 1
-    - _DIntensity_Custom2_X: 0
-    - _DIssolveIntensity: 1
     - _DetailNormalMapScale: 1
-    - _DirectionSmoothness: 0.704
-    - _Dissolve: 3
-    - _DissolveFloat: 1
-    - _DissolveValue: 1
-    - _Dissolve_Custom2_X: 0
-    - _Dissolve_Distort_Value: 0
     - _DstBlend: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _InvFade: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _Opacity: 1
     - _Parallax: 0.02
-    - _Smoothness: 0.437
+    - _Shininess: 0.078125
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _UVMaskDirection: 0
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - DUV_Scroll2: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _UV_XY: {r: 0, g: 0, b: 0, a: 0}
-    - _UV_XY1: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _TintColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

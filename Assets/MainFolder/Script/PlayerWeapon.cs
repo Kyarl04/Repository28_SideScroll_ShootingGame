@@ -30,10 +30,13 @@ public class PlayerWeapon : MonoBehaviour
     private bool isInvincible = false;
     private bool isLaserActive = false;
 
+    private Animator anim;
+
     // --- 외부(PlayerController)에서 호출하는 함수들 ---
 
     private void Start()
     {
+        anim = GetComponent<Animator>();
         // 시작 시 레이저 개수 초기화 및 UI 갱신
         currentLasers = maxLasers;
         UpdateLaserUI();
@@ -110,10 +113,20 @@ public class PlayerWeapon : MonoBehaviour
         if (laserObject != null) laserObject.SetActive(true);
         if (magicCircle != null) magicCircle.Play();
 
+        // ==========================================
+        // [추가] 스킬 시작 애니메이션 재생!
+        // ==========================================
+        if (anim != null) anim.SetTrigger("SpellStart");
+
         yield return new WaitForSeconds(laserDuration);
 
         if (laserObject != null) laserObject.SetActive(false);
         if (magicCircle != null) magicCircle.Stop();
+
+        // ==========================================
+        // [추가] 스킬 종료 애니메이션 재생!
+        // ==========================================
+        if (anim != null) anim.SetTrigger("SpellEnd");
 
         isLaserActive = false;
         isInvincible = false;

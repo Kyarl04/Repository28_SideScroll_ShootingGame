@@ -11,12 +11,20 @@ public class BossPhase
 {
     public DanmakuData pattern;
     public float phaseHP = 1000f;
+    
+    [Tooltip("페이즈가 박살 날 때(죽을 때) 터지는 이펙트")]
     public GameObject transitionEffect;
+
+    // ==========================================
+    // [추가된 변수] 기를 모으는 아우라 이펙트
+    // ==========================================
+    [Tooltip("다음 페이즈 체력이 차오를 때 보스 몸에서 나오는 아우라 이펙트")]
+    public GameObject auraEffect; 
+
     public Sprite[] newBackground;
 
     [Header("Transition Settings")]
-    [Tooltip("이 페이즈로 넘어갈 때 사용할 디졸브 머티리얼 (비워두면 연출 없이 컷 전환)")]
-    public Material customDissolveMaterial;
+    public Material customDissolveMaterial; 
 }
 
 public class DanmakuBoss : MonoBehaviour
@@ -41,6 +49,7 @@ public class DanmakuBoss : MonoBehaviour
     public float bgTransitionDuration = 1.5f;
 
     private Material bgMaterial; // 배경 머티리얼 인스턴스
+    private GameObject activeAuraInstance;
     
     private int currentPhaseIndex = 0;
     public bool isTransitioning = false; 
@@ -77,13 +86,11 @@ public class DanmakuBoss : MonoBehaviour
 
     private IEnumerator StartPhaseRoutine(int index)
     {
-        // 보스가 등장하거나 체력바가 차오르는 동안 무적(isTransitioning) 상태로 둡니다.
         isTransitioning = true; 
         BossPhase currentPhase = phases[index];
 
         currentPhaseHP = currentPhase.phaseHP;
 
-        // UI 켜기 및 체력바 0으로 초기화
         if (hpBarContainer != null) hpBarContainer.SetActive(true);
         if (hpBarFill != null) hpBarFill.fillAmount = 0f; 
 
@@ -93,16 +100,20 @@ public class DanmakuBoss : MonoBehaviour
             spellNameText.gameObject.SetActive(true);
         }
 
-        // =========================================================
-        // [핵심 변경] 게임 시작(1페이즈) 시 등장 대기 시간 추가
-        // =========================================================
         if (index == 0)
         {
-            // 보스가 처음 등장할 때(Intro 애니메이션 재생 중) 1.5초 정도 여유롭게 대기합니다.
             yield return new WaitForSeconds(1.5f);
         }
 
-        // 모든 페이즈 공통: 체력바가 0에서 1로 차오르는 연출 (1초 소요)
+        // =========================================================
+        // [수정됨] 새로운 페이즈의 아우라 켜기 (파괴하지 않고 계속 유지!)
+        // =========================================================
+        if (currentPhase.auraEffect != null)
+        {
+            activeAuraInstance = Instantiate(currentPhase.auraEffect, transform.position, Quaternion.identity, transform);
+        }
+
+        // 체력바 차오르는 연출 (1초 소요)
         if (hpBarFill != null)
         {
             float fillDuration = 1.0f; 
@@ -114,15 +125,16 @@ public class DanmakuBoss : MonoBehaviour
                 hpBarFill.fillAmount = Mathf.Lerp(0f, 1f, timer / fillDuration);
                 yield return null; 
             }
-            hpBarFill.fillAmount = 1f; // 오차 보정용 100% 꽉 채우기
+            hpBarFill.fillAmount = 1f; 
         }
 
-        // 체력이 다 차면 스펠카드 선언 애니메이션 재생
+        // ❌ (기존에 있던 2초 뒤 파괴하는 코드는 완전히 삭제했습니다!) ❌
+
         if (anim != null) anim.SetTrigger("SpellCard");
 
-        // 전투 시작 (무적 해제, 이제부터 데미지가 들어갑니다!)
         isTransitioning = false; 
-
+        
+        // ... (아래는 기존 이동 및 탄막 코드 동일) ...
         if (currentPhase.pattern != null && currentPhase.pattern.move != null)
         {
             StartCoroutine(BossMovementRoutine(currentPhase.pattern.move));
@@ -137,6 +149,9 @@ public class DanmakuBoss : MonoBehaviour
     public void BossTakeDamage(float damage)
     {
         if (isTransitioning) return;
+
+        // [추가된 탐정 코드] 보스가 맞을 때마다 콘솔 창에 데미지와 남은 체력을 보고합니다!
+        Debug.Log($"보스 피격! 들어온 데미지: {damage} / 현재 남은 체력: {currentPhaseHP}"); 
 
         currentPhaseHP -= damage;
         
@@ -170,6 +185,22 @@ public class DanmakuBoss : MonoBehaviour
     {
         if (spellNameText != null) spellNameText.gameObject.SetActive(false);
         if (hpBarContainer != null) hpBarContainer.SetActive(false);
+
+        if (activeAuraInstance != null)
+        {
+            // 이펙트가 뚝 끊기지 않게 파티클 생성을 멈춤
+            ParticleSystem[] allPs = activeAuraInstance.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem ps in allPs)
+            {
+                ps.Stop();
+            }
+            
+            // 잔상이 사라질 여유 시간을 주고 완전 파괴
+            Destroy(activeAuraInstance, 2.0f);
+            
+            // 다음 페이즈를 위해 변수 비우기
+            activeAuraInstance = null; 
+        }
 
         if (SoundManager.Instance != null) SoundManager.Instance.PlayBossPhaseChange();
         if (phases[currentPhaseIndex].transitionEffect != null)

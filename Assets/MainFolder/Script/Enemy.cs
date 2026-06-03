@@ -70,25 +70,22 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        // 보스가 페이즈 전환 중(무적)이면 데미지 무시
-        if (bossScript != null && bossScript.isTransitioning) return;
+        // 1. 보스라면? -> 내 체력(0)은 무시하고 오직 DanmakuBoss 스크립트에게 데미지 처리를 온전히 떠넘깁니다!
+        if (bossScript != null)
+        {
+            bossScript.BossTakeDamage(damage);
+            return; // 떠넘겼으니 여기서 함수를 바로 끝냅니다.
+        }
 
+        // 2. 일반 몬스터라면? -> 기존처럼 자체 체력으로 계산합니다.
         currentHealth -= damage;
+        
         if (healthBar != null) healthBar.fillAmount = currentHealth / maxHealth;
 
         if (currentHealth <= 0)
         {
             currentHealth = 0; // 마이너스 방지
-            
-            // 보스라면 다음 페이즈로, 일반 몹이라면 파괴
-            if (bossScript != null) bossScript.OnPhaseDefeated();
-            else Die();
-        }
-        
-        DanmakuBoss bossPhaseManager = GetComponent<DanmakuBoss>();
-        if (bossPhaseManager != null)
-        {
-            bossPhaseManager.BossTakeDamage(damage);
+            Die();
         }
     }
 
