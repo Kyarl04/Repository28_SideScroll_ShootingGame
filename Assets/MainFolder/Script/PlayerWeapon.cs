@@ -25,10 +25,11 @@ public class PlayerWeapon : MonoBehaviour
     public GameObject[] laserUIs;       // 인스펙터에서 UI 이미지들을 배열로 넣습니다.
 
     // 상태 변수
+    public PlayerController playerController;
     private float nextFireTime = 0f;
     private float lastLaserTime = -999f;
-    private bool isInvincible = false;
     private bool isLaserActive = false;
+   
 
     private Animator anim;
 
@@ -37,7 +38,10 @@ public class PlayerWeapon : MonoBehaviour
     private void Start()
     {
         anim = GetComponent<Animator>();
-        // 시작 시 레이저 개수 초기화 및 UI 갱신
+        
+        // [추가] 내 오브젝트에 붙어있는 컨트롤러 스크립트 가져오기
+        playerController = GetComponent<PlayerController>(); 
+        
         currentLasers = maxLasers;
         UpdateLaserUI();
     }
@@ -107,7 +111,7 @@ public class PlayerWeapon : MonoBehaviour
         SoundManager.Instance.PlayPlayerLaserFire();
         
         isLaserActive = true;
-        isInvincible = true;
+        if (playerController != null) playerController.isInvincible = true;
         lastLaserTime = Time.time;
 
         if (laserObject != null) laserObject.SetActive(true);
@@ -129,6 +133,6 @@ public class PlayerWeapon : MonoBehaviour
         if (anim != null) anim.SetTrigger("SpellEnd");
 
         isLaserActive = false;
-        isInvincible = false;
+        if (playerController != null) playerController.isInvincible = false;
     }
 }

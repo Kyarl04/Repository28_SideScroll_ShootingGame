@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject[] hearts;
     
     [Header("Blink Effect")]  
-    private bool isInvincible = false;
+    public bool isInvincible = false;
     [SerializeField] private float invincibilityDuration = 2.0f;
     [SerializeField] private SpriteRenderer spriteRenderer;
 

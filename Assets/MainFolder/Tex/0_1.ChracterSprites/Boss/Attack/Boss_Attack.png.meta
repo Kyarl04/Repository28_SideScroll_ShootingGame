@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 860e9754ef1029d40a326338e3c1664b
+guid: 574476248ef372f49b19f40c41b32dcc
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 40
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -93,7 +93,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Boss_MoveLoop_0
+      name: Boss_Attack_0
       rect:
         serializedVersion: 2
         x: 0
@@ -107,14 +107,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: db913233b8b698b468cefcdb9ee8301f
-      internalID: 1432459797
+      spriteID: 14eb8c4d94ac7044a8c81ed43b2bfb3a
+      internalID: -962014571
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_MoveLoop_1
+      name: Boss_Attack_1
       rect:
         serializedVersion: 2
         x: 128
@@ -128,14 +128,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bea3e4a3be180034d9afff66c7f156aa
-      internalID: -949878807
+      spriteID: 0d2b013341acfd24b9d5d7dbbafe035d
+      internalID: -1151923128
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_MoveLoop_2
+      name: Boss_Attack_2
       rect:
         serializedVersion: 2
         x: 256
@@ -149,14 +149,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2b1b20c547de333478f92d0674094665
-      internalID: 1133853866
+      spriteID: 855432d5d5e1f734ea1f8179915c8bac
+      internalID: 235902746
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_MoveLoop_3
+      name: Boss_Attack_3
       rect:
         serializedVersion: 2
         x: 384
@@ -170,14 +170,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fff23e0589d290c4abc37682cc8e06b4
-      internalID: 387679645
+      spriteID: 6cf366d0fbf1a0d448a1107ff8df2077
+      internalID: 881440426
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_MoveLoop_4
+      name: Boss_Attack_4
       rect:
         serializedVersion: 2
         x: 512
@@ -191,14 +191,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: be4ed41d6b4dd9b44a67aadbe59ac80a
-      internalID: -1114798989
+      spriteID: f8e8264c2cfb83b4683341584097af88
+      internalID: 641416715
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_MoveLoop_5
+      name: Boss_Attack_5
       rect:
         serializedVersion: 2
         x: 640
@@ -212,14 +212,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9517e83311b7ec34998a41f1e9bb9257
-      internalID: 440017383
+      spriteID: 403475bac69ea44418a0c370ee187d2c
+      internalID: -1897774645
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_MoveLoop_6
+      name: Boss_Attack_6
       rect:
         serializedVersion: 2
         x: 768
@@ -233,50 +233,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a83d4368530946d40b360ec2f4c218e0
-      internalID: 1997398640
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Boss_MoveLoop_7
-      rect:
-        serializedVersion: 2
-        x: 896
-        y: 0
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 04a6074862449c04c96f86447496574c
-      internalID: -430758835
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Boss_MoveLoop_8
-      rect:
-        serializedVersion: 2
-        x: 1024
-        y: 0
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 92380f31cffc65c4d996bd929a92f6dc
-      internalID: -558654463
+      spriteID: d4c65bff4c1650542b9f51f3b875431b
+      internalID: 48242612
       vertices: []
       indices: 
       edges: []
@@ -284,7 +242,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 9139cf208d4c11b488f85a9c6ff02ea9
     internalID: 0
     vertices: []
     indices: 
@@ -292,15 +250,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Boss_MoveLoop_0: 1432459797
-      Boss_MoveLoop_1: -949878807
-      Boss_MoveLoop_2: 1133853866
-      Boss_MoveLoop_3: 387679645
-      Boss_MoveLoop_4: -1114798989
-      Boss_MoveLoop_5: 440017383
-      Boss_MoveLoop_6: 1997398640
-      Boss_MoveLoop_7: -430758835
-      Boss_MoveLoop_8: -558654463
+      Boss_Attack_0: -962014571
+      Boss_Attack_1: -1151923128
+      Boss_Attack_2: 235902746
+      Boss_Attack_3: 881440426
+      Boss_Attack_4: 641416715
+      Boss_Attack_5: -1897774645
+      Boss_Attack_6: 48242612
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

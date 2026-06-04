@@ -51,6 +51,13 @@ public class DanmakuBoss : MonoBehaviour
     private Material bgMaterial; // 배경 머티리얼 인스턴스
     private GameObject activeAuraInstance;
     
+    [Header("Hit Flash Settings")]
+    [Tooltip("피격 시 체력바가 번쩍일 색상 (예: 하얀색 또는 빨간색)")]
+    public Color hitFlashColor = Color.white; 
+    
+    private Color originalHpColor;       // 원래 체력바 색상 기억용
+    private Coroutine flashCoroutine;    // 중복 실행 방지용 코루틴 담는 곳
+
     private int currentPhaseIndex = 0;
     public bool isTransitioning = false; 
     
@@ -63,6 +70,11 @@ public class DanmakuBoss : MonoBehaviour
 
         GameObject pObj = GameObject.FindGameObjectWithTag("Player");
         if (pObj != null) player = pObj.transform;
+
+        if (hpBarFill != null)
+        {
+            originalHpColor = hpBarFill.color;
+        }
 
         if (bgPanelImage != null)
         {
@@ -158,6 +170,9 @@ public class DanmakuBoss : MonoBehaviour
         if (hpBarFill != null)
         {
             hpBarFill.fillAmount = currentPhaseHP / phases[currentPhaseIndex].phaseHP;
+
+            if (flashCoroutine != null) StopCoroutine(flashCoroutine); // 이미 번쩍이고 있다면 강제 종료
+            flashCoroutine = StartCoroutine(HpBarFlashRoutine());
         }
 
         if (currentPhaseHP <= 0)
@@ -276,6 +291,19 @@ public class DanmakuBoss : MonoBehaviour
 
             Debug.Log("보스 최종 클리어!");
             Destroy(gameObject);
+        }
+    }
+
+    // ==========================================
+    // 체력바 색상을 아주 짧게(틱) 바꿨다가 되돌리는 코루틴
+    // ==========================================
+    private IEnumerator HpBarFlashRoutine()
+    {
+        if (hpBarFill != null)
+        {
+            hpBarFill.color = hitFlashColor;          // 1. 지정한 색(흰색 등)으로 변경
+            yield return new WaitForSeconds(0.05f);   // 2. 0.05초 아주 짧게 대기 (틱)
+            hpBarFill.color = originalHpColor;        // 3. 다시 원래 색으로 복구
         }
     }
 

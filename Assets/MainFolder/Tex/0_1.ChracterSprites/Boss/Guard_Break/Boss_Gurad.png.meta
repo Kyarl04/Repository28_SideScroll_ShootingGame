@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 844998648238c4e40989f5406e80b2da
+guid: 87f65628c612f4547a55a1e1d0bbe5d3
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -20,7 +20,7 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
-  isReadable: 0
+  isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 40
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -93,7 +93,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Boss_MoveEnd_0
+      name: Boss_Gurad_0
       rect:
         serializedVersion: 2
         x: 0
@@ -107,14 +107,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b3a87dc0c339cf24cad6c3be560cde22
-      internalID: -1077369814
+      spriteID: d30846c58d974794e91a7559dbb69c13
+      internalID: 1258884362
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_MoveEnd_1
+      name: Boss_Gurad_1
       rect:
         serializedVersion: 2
         x: 128
@@ -128,14 +128,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fed3ffb72ee35b74aa3fddb5df648010
-      internalID: 2111802182
+      spriteID: ae314f159ffa00f4185e590dadfe1a6f
+      internalID: -839668708
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_MoveEnd_2
+      name: Boss_Gurad_2
       rect:
         serializedVersion: 2
         x: 256
@@ -149,14 +149,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5e90a98136985454487b9d8dbee6067e
-      internalID: -864120147
+      spriteID: 60a196b4cc51057489cbe97746bea55e
+      internalID: -1024835202
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_MoveEnd_3
+      name: Boss_Gurad_3
       rect:
         serializedVersion: 2
         x: 384
@@ -170,14 +170,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 22b8c123a1c43c04984a484f2ece579d
-      internalID: 372700663
+      spriteID: 052ff5fe53f884f4ca7605dc2a61c486
+      internalID: 409085003
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_MoveEnd_4
+      name: Boss_Gurad_4
       rect:
         serializedVersion: 2
         x: 512
@@ -191,14 +191,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1d45094ccda0c3f49be0fecf9399681c
-      internalID: 1347473501
+      spriteID: f56d1a65ecd51b842a44cf7a6e775885
+      internalID: -1954466439
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_MoveEnd_5
+      name: Boss_Gurad_5
       rect:
         serializedVersion: 2
         x: 640
@@ -212,14 +212,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a4ac0ab8fab7c7040833484cca34e9a7
-      internalID: -746904359
+      spriteID: af172c66f2888374c89a8e2c67ad0dea
+      internalID: -1838555257
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Boss_MoveEnd_6
+      name: Boss_Gurad_6
       rect:
         serializedVersion: 2
         x: 768
@@ -233,8 +233,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 83a53f7bb97deb24bb0d693d640df9e8
-      internalID: 1491992810
+      spriteID: 9b62728d643251a45aaf766e711818b5
+      internalID: -414418451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Gurad_7
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2318cba7f5977a43a7fb09fae53a3ec
+      internalID: 647716188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Gurad_8
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d27a4faff6140941a834ed4147ca78f
+      internalID: -1880887586
       vertices: []
       indices: 
       edges: []
@@ -242,7 +284,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 55d23a63f7205df4297b6127952a8bde
     internalID: 0
     vertices: []
     indices: 
@@ -250,13 +292,15 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Boss_MoveEnd_0: -1077369814
-      Boss_MoveEnd_1: 2111802182
-      Boss_MoveEnd_2: -864120147
-      Boss_MoveEnd_3: 372700663
-      Boss_MoveEnd_4: 1347473501
-      Boss_MoveEnd_5: -746904359
-      Boss_MoveEnd_6: 1491992810
+      Boss_Gurad_0: 1258884362
+      Boss_Gurad_1: -839668708
+      Boss_Gurad_2: -1024835202
+      Boss_Gurad_3: 409085003
+      Boss_Gurad_4: -1954466439
+      Boss_Gurad_5: -1838555257
+      Boss_Gurad_6: -414418451
+      Boss_Gurad_7: 647716188
+      Boss_Gurad_8: -1880887586
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
