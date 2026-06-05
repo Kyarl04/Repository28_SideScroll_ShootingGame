@@ -21,7 +21,8 @@ public class PlayerController : MonoBehaviour
     public int maxLives = 3;
     private int currentLives;
     [SerializeField] private GameObject[] hearts;
-    
+    [SerializeField] private GameObject heartBreakEffectPrefab;
+
     [Header("Blink Effect")]  
     public bool isInvincible = false;
     [SerializeField] private float invincibilityDuration = 2.0f;
@@ -79,6 +80,20 @@ public class PlayerController : MonoBehaviour
     public void LoseLife()
     {
         if (SoundManager.Instance != null) SoundManager.Instance.PlayPlayerHit(); 
+        
+        if (currentLives > 0 && currentLives <= hearts.Length)
+        {
+            int brokenHeartIndex = currentLives - 1; // 방금 사라질 하트의 배열 번호
+            
+            if (heartBreakEffectPrefab != null && hearts[brokenHeartIndex] != null)
+            {
+                // 부서지는 하트와 똑같은 위치에 이펙트를 생성합니다. (UI 캔버스 안에서 생성되도록 부모 설정)
+                GameObject effect = Instantiate(heartBreakEffectPrefab, hearts[brokenHeartIndex].transform.position, Quaternion.identity, hearts[brokenHeartIndex].transform.parent);
+                
+                // 이펙트 재생이 끝나면 자동으로 지워지도록 1.5초 뒤 파괴
+                Destroy(effect, 1.5f);
+            }
+        }
         
         currentLives--;
         UpdateHeartUI();

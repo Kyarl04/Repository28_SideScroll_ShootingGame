@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bbffb5b1a33837479cc5676da131ba1, type: 3}
   m_Name: Shot Data_1
   m_EditorClassIdentifier: 
-  prefabIndex: 2
+  prefabIndex: 10
   lifetime: 15
   speed:
     value: 6

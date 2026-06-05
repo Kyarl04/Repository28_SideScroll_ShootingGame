@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dd43c9a87219c3145a431bde1cc9746c, type: 3}
-  m_Name: DanmakuBossPattern_5
+  m_Name: DanmakuBossPattern_Test
   m_EditorClassIdentifier: 
   danmakuName: Phase_5
   data:
@@ -20,7 +20,7 @@ MonoBehaviour:
   animation: 0
   move:
     type: 0
-    startPosition: {x: 0, y: 0, z: 0}
+    startPosition: {x: 1, y: 0, z: 0}
     startDelay: 1
     minX: -2
     maxX: 0.5
