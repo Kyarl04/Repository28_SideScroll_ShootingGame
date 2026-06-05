@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     public bool isInvincible = false;
     [SerializeField] private float invincibilityDuration = 2.0f;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private GameObject invincibilityEffectPrefab; 
+    private GameObject activeInvincibilityEffect;
 
     private void Start()
     {
@@ -119,20 +121,24 @@ public class PlayerController : MonoBehaviour
     {
         isInvincible = true;
         
+        // ==========================================
+        // [추가됨] 무적 시작 시 이펙트를 켭니다! (플레이어 몸에 붙여서 따라다니게)
+        // ==========================================
+        if (invincibilityEffectPrefab != null)
+        {
+            activeInvincibilityEffect = Instantiate(invincibilityEffectPrefab, transform.position, Quaternion.identity, transform);
+        }
+
         float blinkInterval = 0.1f;
         float timer = 0f;
 
         while (timer < invincibilityDuration)
         {
-            // 실시간으로 옵션창에 설정된 투명도 값을 가져옵니다. (매니저가 없으면 기본값 1f)
             float targetAlpha = GameOptionManager.Instance != null ? GameOptionManager.Instance.CurrentPlayerAlpha : 1f;
 
-            // 1. 설정된 투명도보다 더 옅게 만들어서 깜빡이는 효과 (예: 설정값의 30%)
             spriteRenderer.color = new Color(1, 1, 1, targetAlpha * 0.3f); 
             yield return new WaitForSeconds(blinkInterval);
             
-            // 2. 다시 설정된 투명도로 복구
-            // (도중에 유저가 ESC를 누르고 슬라이더를 바꿨을 수도 있으니 한번 더 값을 가져옵니다)
             targetAlpha = GameOptionManager.Instance != null ? GameOptionManager.Instance.CurrentPlayerAlpha : 1f;
             spriteRenderer.color = new Color(1, 1, 1, targetAlpha);   
             yield return new WaitForSeconds(blinkInterval);
@@ -140,13 +146,24 @@ public class PlayerController : MonoBehaviour
             timer += blinkInterval * 2;
         }
 
-        // 루프가 끝난 뒤, 완전히 옵션 매니저의 투명도로 최종 복구!
         float finalAlpha = GameOptionManager.Instance != null ? GameOptionManager.Instance.CurrentPlayerAlpha : 1f;
         spriteRenderer.color = new Color(1, 1, 1, finalAlpha); 
         
         isInvincible = false;
-    }
 
+        // ==========================================
+        // [추가됨] 무적 시간이 끝나면 이펙트를 끕니다!
+        // ==========================================
+        if (activeInvincibilityEffect != null)
+        {
+            // 이펙트가 부자연스럽게 뚝 끊기지 않도록 파티클 재생만 멈춥니다.
+            ParticleSystem ps = activeInvincibilityEffect.GetComponent<ParticleSystem>();
+            if (ps != null) ps.Stop();
+
+            // 파티클 잔상이 사라질 여유 시간을 주고 완전 파괴 (파티클이 아니면 즉시 파괴)
+            Destroy(activeInvincibilityEffect, ps != null ? 1.0f : 0f);
+        }
+    }
     private void SetScreenBoundaries()
     {
         Camera cam = Camera.main;

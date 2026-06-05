@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5bbffb5b1a33837479cc5676da131ba1, type: 3}
-  m_Name: Shot Data_1
+  m_Name: Shot Data_2
   m_EditorClassIdentifier: 
-  prefabIndex: 8
-  lifetime: 0
+  prefabIndex: 4
+  lifetime: 10
   speed:
-    value: 5
-    min: 5
-    max: 5
+    value: 3
+    min: 0
+    max: 3
   deltaSpeed: 0
   angle:
     value: 0
-    min: 0
+    min: -55
     max: 0
-  deltaAngle: 0
+  deltaAngle: -3
   moveMode: 0
   wallCheckMode: 0

@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Fire Data_1
   m_EditorClassIdentifier: 
   startDir: {x: 1, y: 0, z: 0}
-  directionType: 1
-  startAngle: 80
-  startDistance: 0.5
-  count: 3
-  posDir: {x: 0, y: 0, z: 0}
+  directionType: 0
+  startAngle: 0
+  startDistance: 1
+  count: 9
+  posDir: {x: 1, y: -1, z: 0}
   posStartDistance: 0
   delayOperations: []
-  type: 1
+  type: 0
   sector:
-    deltaAngle: 30
+    deltaAngle: 0
   spray:
     fire:
       value: 0

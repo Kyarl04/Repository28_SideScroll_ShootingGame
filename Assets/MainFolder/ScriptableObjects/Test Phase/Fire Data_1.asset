@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8ba36e8c0c15c048ae08b31a1a59083, type: 3}
   m_Name: Fire Data_1
   m_EditorClassIdentifier: 
-  startDir: {x: -1, y: 0, z: 0}
-  directionType: 2
-  startAngle: 0
-  startDistance: 0.5
-  count: 9
+  startDir: {x: 1, y: 0, z: 0}
+  directionType: 0
+  startAngle: 10
+  startDistance: -10
+  count: 8
   posDir: {x: 0, y: 0, z: 0}
   posStartDistance: 0
   delayOperations: []
   type: 0
   sector:
-    deltaAngle: 5
+    deltaAngle: 0
   spray:
     fire:
       value: 0
@@ -36,6 +36,6 @@ MonoBehaviour:
     num: 1
     interval: 0.03
     deltaDistance: 0
-    deltaAngle: 3
+    deltaAngle: 0
     posDeltaAngle: 0
     posDeltaDistance: 0

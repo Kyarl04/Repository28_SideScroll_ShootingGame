@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53f28bb6f08d82e41a68ab9a62dcb00f, type: 3}
   m_Name: Barrage_1
   m_EditorClassIdentifier: 
-  shotData: {fileID: 11400000, guid: 7a7b605f90d6b9749b545870552d82f6, type: 2}
-  startDelay: 0.5
+  shotData: {fileID: 11400000, guid: bb1eb904a8909fa4bb0ea5a357786e52, type: 2}
+  startDelay: 0
   interval: 0.1
-  fireData: {fileID: 11400000, guid: 4ebfba965eef3b146a66dac96085542b, type: 2}
+  fireData: {fileID: 11400000, guid: 5824d1f1512993b43b160b29bc6ccddd, type: 2}
   fireOffset:
-    cycle: 24
+    cycle: 20
     startCycleIndex: 0
-    range: -60
+    range: 360
     type: 1
     reciprocate: 1
