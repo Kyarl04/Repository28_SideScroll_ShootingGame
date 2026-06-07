@@ -857,10 +857,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1372358781}
-        m_TargetAssemblyTypeName: SceneTransitionManager, Assembly-CSharp
-        m_MethodName: TransitionToScene
-        m_Mode: 5
+      - m_Target: {fileID: 2042413853}
+        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+        m_MethodName: StartGame
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1440,7 +1440,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -1536,7 +1536,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -1632,7 +1632,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -1732,15 +1732,17 @@ MonoBehaviour:
   bgmSource: {fileID: 2042413857}
   sfxSource: {fileID: 2042413856}
   loopingSfxSource: {fileID: 2042413855}
-  menuBGM: {fileID: 0}
-  gameBGM: {fileID: 0}
+  menuBGM: {fileID: 8300000, guid: c090d527e31a4a442add7f3eca4c4b6a, type: 3}
+  gameBGM: {fileID: 8300000, guid: ce76b892432abc647aab92e9c5ad4f48, type: 3}
+  fadeDuration: 1.5
+  maxBgmVolume: 1
   buttonClickSFX: {fileID: 0}
-  playerShootSFX: {fileID: 0}
-  playerBulletHitSFX: {fileID: 0}
-  playerLaserFireSFX: {fileID: 0}
+  playerShootSFX: {fileID: 8300000, guid: 1cd461548a7b5464eaa464dcffeb4ab0, type: 3}
+  playerBulletHitSFX: {fileID: 8300000, guid: 6b03befc2f7096645917a6bc0d767019, type: 3}
+  playerLaserFireSFX: {fileID: 8300000, guid: 0c32391f5870a604fb6c5ce278de5d71, type: 3}
   playerLaserHitSFX: {fileID: 0}
-  bossPhaseChangeSFX: {fileID: 0}
-  playerHitSFX: {fileID: 0}
+  bossPhaseChangeSFX: {fileID: 8300000, guid: cb739a408a1c77544807b68867e9bf73, type: 3}
+  playerHitSFX: {fileID: 8300000, guid: 7a9d3347c745dab41a695c2b28f30822, type: 3}
 --- !u!222 &3305728989874658164
 CanvasRenderer:
   m_ObjectHideFlags: 0

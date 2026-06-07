@@ -1,33 +1,48 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // 씬(Scene) 이동을 위해 반드시 필요한 네임스페이스입니다.
+using UnityEngine.SceneManagement; 
 
 public class MainMenuManager : MonoBehaviour
 {
     [Header("Scene Settings")]
-    [Tooltip("이동할 게임 씬의 이름을 정확히 적어주세요. (예: GameScene)")]
     public string gameSceneName = "GameScene";
 
     // '게임 스타트' 버튼을 눌렀을 때 실행될 함수
     public void StartGame()
     {
         Debug.Log("게임을 시작합니다!");
-        // 지정된 이름의 씬을 불러옵니다.
-        SoundManager.Instance.PlayButtonClick(); // 버튼 소리 재생
-        SoundManager.Instance.PlayGameBGM();     // 게임 씬 BGM으로 교체
-        SceneManager.LoadScene(gameSceneName);
+        
+        // 1. 사운드 매니저에게 버튼 소리와 게임 BGM(페이드 인/아웃)을 명령합니다!
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayButtonClick(); 
+            SoundManager.Instance.PlayGameBGM();     
+        }
+
+        // 2. 올려주신 화면 전환 매니저(SceneTransitionManager)를 통해 부드럽게 씬을 넘깁니다!
+        if (SceneTransitionManager.Instance != null)
+        {
+            SceneTransitionManager.Instance.TransitionToScene(gameSceneName);
+        }
+        else
+        {
+            // 혹시 전환 매니저가 없다면 기존 방식대로 바로 씬을 넘깁니다.
+            SceneManager.LoadScene(gameSceneName);
+        }
     }
 
     // '게임 종료' 버튼을 눌렀을 때 실행될 함수
     public void ExitGame()
     {
-        SoundManager.Instance.PlayButtonClick();
-        SoundManager.Instance.PlayMenuBGM();     // 메뉴 씬 BGM으로 교체
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayButtonClick();
+            SoundManager.Instance.PlayMenuBGM();     
+        }
+        
         Debug.Log("게임을 종료합니다!");
 
-        // 1. 유니티 에디터 환경에서 테스트할 때 멈추는 기능
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-        // 2. 실제 파일(exe, apk 등)로 빌드된 게임에서 끄는 기능
 #else
         Application.Quit();
 #endif
