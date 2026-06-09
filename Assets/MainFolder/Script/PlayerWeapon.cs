@@ -80,7 +80,10 @@ public class PlayerWeapon : MonoBehaviour
 
     private void FireBullets()
     {
-        SoundManager.Instance.PlayPlayerShoot();
+        if (SoundManager.Instance != null) 
+        {
+            SoundManager.Instance.PlayPlayerShoot();
+        }
 
         bool isFocused = Input.GetKey(KeyCode.LeftShift);
         
@@ -108,7 +111,10 @@ public class PlayerWeapon : MonoBehaviour
     }
     private IEnumerator ShootLaser()
     {
-        SoundManager.Instance.PlayPlayerLaserFire();
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayPlayerLaserFire();
+        }
         
         isLaserActive = true;
         if (playerController != null) playerController.isInvincible = true;

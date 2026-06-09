@@ -6003,19 +6003,19 @@ PrefabInstance:
     - target: {fileID: 7997586231787002137, guid: 967ecdd31e3ea68488724d159dde6acd, type: 3}
       propertyPath: phases.Array.data[1].auraEffect
       value: 
-      objectReference: {fileID: 969144842202437255, guid: 18e0897da4d057048b3e9c9d4fec935a, type: 3}
+      objectReference: {fileID: 6241524573626554087, guid: 27ee9b95946188c41b0648ba234adfb0, type: 3}
     - target: {fileID: 7997586231787002137, guid: 967ecdd31e3ea68488724d159dde6acd, type: 3}
       propertyPath: phases.Array.data[2].auraEffect
       value: 
-      objectReference: {fileID: 6241524573626554087, guid: 27ee9b95946188c41b0648ba234adfb0, type: 3}
+      objectReference: {fileID: 1116574390217911232, guid: 3a2d6919a58b4734d833b93f986978bd, type: 3}
     - target: {fileID: 7997586231787002137, guid: 967ecdd31e3ea68488724d159dde6acd, type: 3}
       propertyPath: phases.Array.data[3].auraEffect
       value: 
-      objectReference: {fileID: 1116574390217911232, guid: 3a2d6919a58b4734d833b93f986978bd, type: 3}
+      objectReference: {fileID: 3813241975161217031, guid: c1acf69c1d2b13b47ba5e28cf1cf2822, type: 3}
     - target: {fileID: 7997586231787002137, guid: 967ecdd31e3ea68488724d159dde6acd, type: 3}
       propertyPath: phases.Array.data[4].auraEffect
       value: 
-      objectReference: {fileID: 3813241975161217031, guid: c1acf69c1d2b13b47ba5e28cf1cf2822, type: 3}
+      objectReference: {fileID: 1183774184521361367, guid: 698b9cb86d3a76b4e930e6a9faf5ec0b, type: 3}
     - target: {fileID: 7997586231787002137, guid: 967ecdd31e3ea68488724d159dde6acd, type: 3}
       propertyPath: phases.Array.data[5].auraEffect
       value: 

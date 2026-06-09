@@ -140,7 +140,6 @@ public class DanmakuBoss : MonoBehaviour
             hpBarFill.fillAmount = 1f; 
         }
 
-        // ❌ (기존에 있던 2초 뒤 파괴하는 코드는 완전히 삭제했습니다!) ❌
 
         if (anim != null) anim.SetTrigger("SpellCard");
 

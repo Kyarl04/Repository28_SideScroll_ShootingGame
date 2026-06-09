@@ -31,6 +31,9 @@ public class SoundManager : MonoBehaviour
     public AudioClip bossPhaseChangeSFX;  
     public AudioClip playerHitSFX;        
 
+    private float bulletHitCooldown = 0.05f; // 0.05초 (필요에 따라 조절 가능)
+    private float lastBulletHitTime = -999f;
+
     private void Awake()
     {
         if (Instance == null)
@@ -115,7 +118,17 @@ public class SoundManager : MonoBehaviour
 
     public void PlayButtonClick() => PlaySFX(buttonClickSFX);
     public void PlayPlayerShoot() => PlaySFX(playerShootSFX);
-    public void PlayPlayerBulletHit() => PlaySFX(playerBulletHitSFX);
+    
+    public void PlayPlayerBulletHit() 
+    {
+        // 현재 시간이 '마지막 재생 시간 + 0.05초'를 지났을 때만 재생!
+        if (Time.time >= lastBulletHitTime + bulletHitCooldown)
+        {
+            PlaySFX(playerBulletHitSFX);
+            lastBulletHitTime = Time.time; // 마지막으로 재생한 시간을 지금으로 갱신
+        }
+    }
+
     public void PlayPlayerLaserFire() => PlaySFX(playerLaserFireSFX);
     public void PlayBossPhaseChange() => PlaySFX(bossPhaseChangeSFX);
     public void PlayPlayerHit() => PlaySFX(playerHitSFX);
@@ -125,7 +138,9 @@ public class SoundManager : MonoBehaviour
     // ==========================================
     public void StartLaserHitSFX()
     {
-        if (playerLaserHitSFX == null) return;
+        // [수정됨] loopingSfxSource가 비어있으면 아예 실행하지 않도록 방어막 추가!
+        if (playerLaserHitSFX == null || loopingSfxSource == null) return; 
+        
         if (!loopingSfxSource.isPlaying)
         {
             loopingSfxSource.clip = playerLaserHitSFX;
@@ -136,6 +151,10 @@ public class SoundManager : MonoBehaviour
 
     public void StopLaserHitSFX()
     {
-        loopingSfxSource.Stop();
+        // [수정됨] 끌 때도 스피커가 있는지 먼저 확인합니다.
+        if (loopingSfxSource != null) 
+        {
+            loopingSfxSource.Stop();
+        }
     }
 }

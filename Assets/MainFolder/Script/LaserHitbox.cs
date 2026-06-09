@@ -55,8 +55,10 @@ public class LaserHitbox : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            SoundManager.Instance.StartLaserHitSFX();
-
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.StartLaserHitSFX();
+            }
             Transform enemyTrans = other.transform;
 
             // 이미 이펙트가 붙어있는 적이라면 무시
