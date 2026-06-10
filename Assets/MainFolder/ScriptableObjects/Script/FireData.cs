@@ -4,140 +4,68 @@ using UnityEngine;
 
 namespace Danmaku.Data
 {
-    /// <summary>
-    /// 발사 형태를 정의합니다.
-    /// </summary>
-    public enum FireType
-    {
-        /// <summary>원형(전방위) 발사</summary>
-        Round,
-        /// <summary>부채꼴 발사</summary>
-        Sector,
-        /// <summary>산탄(랜덤 퍼짐) 발사</summary>
-        Spray
-    }
+    public enum FireType { Round, Sector, Spray }
+    public enum DirectionType { Fixed, Aimed, Random }
+    public enum ShotOperationType { ChangeDirectionAndSpeed }
 
     /// <summary>
-    /// 발사 방향의 기준을 정의합니다.
+    /// 탄막의 발사 방향, 개수, 모양을 정의하는 설정 파일.
+    /// FireRound, FireSector, FireSpray 등 파생 데이터를 포함하여 다양한 탄막 기하학 패턴을 생성합니다.
     /// </summary>
-    public enum DirectionType
-    {
-        Fixed,  // 고정된 방향
-        Aimed,  // 플레이어를 조준하는 방향
-        Random  // 무작위 방향
-    }
-
-    public enum ShotOperationType
-    {
-        ChangeDirectionAndSpeed // 발사 후 방향 및 속도 변경
-    }
-
     [CreateAssetMenu(fileName = "Fire Data", menuName = "DanmakuData/FireData", order = 0)]
     public class FireData : ScriptableObject
     {   
         [Header("기본 발사 설정")]
-        /// <summary>총알의 초기 방향 (기본값: 왼쪽)</summary>
         public Vector3 startDir = Vector3.left;
-
-        /// <summary>방향 지정 방식 (고정, 조준, 랜덤)</summary>
         public DirectionType directionType = DirectionType.Fixed;
-
-        /// <summary>초기 방향을 기준으로 한 오프셋(틀어짐) 각도</summary>
         public float startAngle = 0f;
-        
-        /// <summary>발사 원점으로부터 얼마나 떨어져서 생성될지 결정하는 거리</summary>
         public float startDistance = 0f;
-        
-        /// <summary>1회 사격 시 발사되는 총알의 수량</summary>
-        [Range(1, 50)] public int count = 1;
+        [Range(1, 50)] public int count = 1; // 1회 발사 당 탄막 수
 
         [Header("위치 오프셋 설정")]
-        /// <summary>생성 위치가 이동할 방향</summary>
         public Vector3 posDir;
-        /// <summary>생성 위치의 초기 거리 오프셋</summary>
         public float posStartDistance;
         
         [Header("지연 동작 설정")]
-        /// <summary>발사된 총알에 나중에 적용될 동작 리스트 (예: 도중에 멈췄다 날아가기)</summary>
-        public List<DelayOperation> delayOperations;
+        public List<DelayOperation> delayOperations; // 발사 도중 방향/속도 변경 로직
 
         [Header("발사 타입 세부 설정")]
-        /// <summary>발사 모양 타입</summary>
         public FireType type = FireType.Round;
 
         public FireRound round;
         public FireSector sector;
         public FireSpray spray;
-        
-        /// <summary>연속 발사(웨이브) 설정</summary>
-        public FireGroupData group;
+        public FireGroupData group; // 연속적인 발사 그룹(웨이브) 설정
     }
 
     [System.Serializable]
     public class FireGroupData
     {
-        /// <summary>1회 패턴 시 발사되는 그룹(웨이브) 수, 기본값 1</summary>
         [Range(1, 20)] public int num = 1;
-
-        /// <summary>그룹(웨이브) 간의 발사 시간 간격</summary>
         public float interval = 0.1f;
-
-        /// <summary>그룹마다 증가하는 발사 거리 변화량</summary>
-        public float deltaDistance = 0f;
-
-        /// <summary>그룹마다 증가하는 발사 각도 변화량 (예: 회전하는 탄막)</summary>
-        public float deltaAngle = 0f;
-
-        /// <summary>그룹마다 변경되는 생성 위치 각도</summary>
-        public float posDeltaAngle = 0f;
-        /// <summary>그룹마다 변경되는 생성 위치 거리</summary>
+        public float deltaDistance = 0f; // 웨이브마다 총알 생성 거리 증가량
+        public float deltaAngle = 0f;    // 웨이브마다 탄막 전체의 회전각 증가량
+        public float posDeltaAngle = 0f; 
         public float posDeltaDistance = 0f;
 
-        public FireGroupData()
-        {
-            num = 1;
-            interval = 0f;
-        }
-
-        public FireGroupData(int count, float interval)
-        {
-            this.num = count;
-            this.interval = interval;
-        }
+        public FireGroupData() { num = 1; interval = 0f; }
     }
 
-    [System.Serializable]
-    public class FireRound { }
-
-    [System.Serializable]
-    public class FireSector
-    {
-        [Tooltip("부채꼴 발사 시 총알 간의 각도 간격")]
-        public float deltaAngle;
-    }
-
-    [System.Serializable]
-    public class FireSpray
-    {
-        [Tooltip("산탄 발사 속도 제한")]
-        public LimitedValue fire;
-        [Tooltip("산탄 발사 각도 제한")]
-        public LimitedValue angle;
-    }
+    //  
+    // 발사 형태 구조체들입니다.
+    [System.Serializable] public class FireRound { }
+    [System.Serializable] public class FireSector { public float deltaAngle; }
+    [System.Serializable] public class FireSpray { public LimitedValue fire; public LimitedValue angle; }
 
     [System.Serializable]
     public class DelayOperation
     {
         public ShotOperationType type = ShotOperationType.ChangeDirectionAndSpeed;
-        [Tooltip("명령이 실행되기까지의 대기 시간")]
         public float delay;
-        
         public DirectionType directionType;
         public Vector2 direction;
-
         public LimitedValue speed;
         public float deltaSpeed;
-
         public LimitedValue angle;
         public float deltaAngle;
     }

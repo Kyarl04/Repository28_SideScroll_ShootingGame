@@ -1,26 +1,27 @@
 using UnityEngine;
 
+/// <summary>
+/// 슈팅 게임 특유의 끊임없이 스크롤되는 다중 레이어 배경(Parallax)을 구현한 클래스.
+/// 이미지를 자동으로 이어 붙여주고 지정된 속도로 이동시킨 뒤 재배치하는 무한 스크롤 시스템입니다.
+/// </summary>
 public class AutoParallaxSTG : MonoBehaviour
 {
     [System.Serializable]
     public class ParallaxLayer
     {
-        [Tooltip("이 레이어에 속한 배경 이미지들 (2~3장씩)")]
         public Transform[] backgrounds;
-        [Tooltip("이 레이어의 스크롤 속도 (멀리 있을수록 느리게 설정)")]
-        public float speed;
+        public float speed; // 깊이감(Depth)을 주기 위해 레이어마다 속도를 다르게 설정
     }
 
     [Header("다중 레이어 설정")]
     public ParallaxLayer[] layers;
 
     [Header("공통 설정")]
-    [Tooltip("배경 이미지 1장의 정확한 가로 길이")]
-    public float spriteWidth = 19.2f; // 본인 배경 크기에 맞게 수정하세요.
+    public float spriteWidth = 19.2f; 
 
     private void Start()
     {
-        // 시작 시 자동 정렬 (에디터에서 대충 겹쳐놔도 빈틈없이 붙여줍니다)
+        // 시작 시 각 배경 조각들의 간격을 폭에 맞게 자동으로 정렬(Seam-less)해줍니다.
         foreach (var layer in layers)
         {
             for (int i = 0; i < layer.backgrounds.Length; i++)
@@ -44,10 +45,10 @@ public class AutoParallaxSTG : MonoBehaviour
             {
                 Transform bg = layer.backgrounds[i];
 
-                // 카메라가 아닌 배경 자체가 설정된 속도로 왼쪽으로 이동합니다.
+                // 카메라 이동 방식이 아닌 배경 오브젝트 자체를 이동시키는 고전적인 구현
                 bg.Translate(Vector3.left * layer.speed * Time.deltaTime, Space.World);
 
-                // 화면 밖으로 완전히 나갔다면 맨 뒤로 점프 (무한 스크롤)
+                // 화면 밖으로 완전히 벗어난 배경 조각을 맨 뒤로 점프시킵니다.
                 if (bg.position.x <= transform.position.x - spriteWidth)
                 {
                     Vector3 jumpPos = new Vector3(spriteWidth * layer.backgrounds.Length, 0, 0);
@@ -57,16 +58,17 @@ public class AutoParallaxSTG : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 보스의 페이즈가 변경될 때 호출되어 스크롤 중인 배경 이미지를 새롭게 일괄 교체합니다.
+    /// </summary>
     public void ChangeBackgroundSprites(Sprite[] newSprites)
     {
         if (newSprites == null || newSprites.Length == 0) return;
 
         for (int i = 0; i < layers.Length; i++)
         {
-            // 안전장치: 넣은 이미지 개수보다 레이어가 더 많으면, 마지막 이미지로 채웁니다.
             Sprite targetSprite = (i < newSprites.Length) ? newSprites[i] : newSprites[newSprites.Length - 1];
 
-            // 해당 레이어 안에 있는 모든 배경 조각(2~3장)의 이미지를 일괄 교체
             foreach (Transform bg in layers[i].backgrounds)
             {
                 SpriteRenderer sr = bg.GetComponent<SpriteRenderer>();

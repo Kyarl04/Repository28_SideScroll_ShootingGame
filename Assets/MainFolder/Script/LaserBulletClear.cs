@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class LaserBulletClear : MonoBehaviour
 {
     [Header("Effect Settings")]
-    [Tooltip("총알이 지워질 때 터질 이펙트의 풀(Pool) 인덱스 번호 (예: 0)")]
+    [Tooltip("일반 적 총알(EnemyBullet)이 지워질 때 터질 이펙트의 풀(Pool) 인덱스 번호")]
     public int clearEffectIndex = 0; 
 
     private Collider2D col;
@@ -15,7 +15,6 @@ public class LaserBulletClear : MonoBehaviour
     private void Start()
     {
         col = GetComponent<Collider2D>();
-        
         filter.useTriggers = true; 
         filter.useLayerMask = false; 
     }
@@ -30,36 +29,47 @@ public class LaserBulletClear : MonoBehaviour
         {
             Collider2D other = results[i];
             
+            // 1. 일반 적 총알 (EnemyBullet) 처리 로직
             if (other.CompareTag("EnemyBullet"))
             {
-                // ==========================================
-                // [추가된 부분] 총알이 사라지기 전에 그 위치(other.transform.position)에 이펙트를 터뜨립니다!
-                // ==========================================
                 if (BulletPooler.Instance != null)
                 {
                     GameObject effect = BulletPooler.Instance.GetEffect(clearEffectIndex, other.transform.position, Quaternion.identity);
-                    
-                    // PooledEffect 스크립트가 있다면 인덱스를 세팅해 줍니다 (Enemy.cs와 동일한 방식)
                     if (effect != null) 
                     {
                         var pooledEffect = effect.GetComponent<PooledEffect>();
-                        if (pooledEffect != null)
-                        {
-                            pooledEffect.effectPoolIndex = clearEffectIndex;
-                        }
+                        if (pooledEffect != null) pooledEffect.effectPoolIndex = clearEffectIndex;
                     }
                 }
 
-                // 기존 총알 지우는 코드
                 Bullet b = other.GetComponent<Bullet>();
-                
-                if (b != null)
+                if (b != null) BulletPooler.Instance.ReturnBullet(other.gameObject, b.poolIndex);
+                else other.gameObject.SetActive(false);
+            }
+            // =========================================================
+            // 2. [NEW] 파괴 가능한 장애물 탄막 (ObstacleBullet) 처리 로직
+            // =========================================================
+            else if (other.CompareTag("ObstacleBullet"))
+            {
+                DestructibleObstacle obstacle = other.GetComponent<DestructibleObstacle>();
+                if (obstacle != null)
                 {
-                    BulletPooler.Instance.ReturnBullet(other.gameObject, b.poolIndex);
-                }
-                else
-                {
-                    other.gameObject.SetActive(false);
+                    // [핵심 요구사항] 장애물이 태어날 때 세팅된 고유의 이펙트 번호(플레이어 탄 피격 이펙트)를 가져옵니다.
+                    int obstacleEffectIndex = obstacle.effectIndex;
+
+                    // 레이저 전용 이펙트가 아니라, 방금 가져온 장애물 전용 이펙트를 터뜨려 줍니다!
+                    if (BulletPooler.Instance != null)
+                    {
+                        GameObject effect = BulletPooler.Instance.GetEffect(obstacleEffectIndex, other.transform.position, Quaternion.identity);
+                        if (effect != null)
+                        {
+                            var pooledEffect = effect.GetComponent<PooledEffect>();
+                            if (pooledEffect != null) pooledEffect.effectPoolIndex = obstacleEffectIndex;
+                        }
+                    }
+
+                    // 이펙트를 재생했으므로 장애물 오브젝트는 중복 연산 없이 바로 풀로 안전하게 회수합니다.
+                    obstacle.ReturnToPool();
                 }
             }
         }

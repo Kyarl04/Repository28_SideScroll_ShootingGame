@@ -4,19 +4,23 @@ using UnityEngine.SceneManagement;
 using DG.Tweening;
 using System.Collections;
 
+/// <summary>
+/// 유니티 비동기 씬 로드(LoadSceneAsync)와 DOTween을 결합하여 
+/// 씬이 로드되는 동안 자연스러운 셰이더 기반 디졸브(Dissolve) 연출을 처리하는 매니저 클래스.
+/// </summary>
 public class SceneTransitionManager : MonoBehaviour
 {
     public static SceneTransitionManager Instance;
 
     [Header("UI Elements")]
-    public CanvasGroup transitionCanvasGroup; 
-    public Image fadeImage; // 여기에 'Panel'을 넣으시면 됩니다!
+    public CanvasGroup transitionCanvasGroup; // 레이캐스트 블록(터치 방지) 및 UI 표시 제어용
+    public Image fadeImage; 
 
     [Header("Material Settings")]
-    public string dissolvePropertyName = "_D_Intensity"; // 찾으신 진짜 레퍼런스 이름 입력
+    public string dissolvePropertyName = "_D_Intensity"; // 셰이더 내에서 조작할 프로퍼티 이름
     public float dissolveDuration = 1.0f;
 
-    private Material dissolveMaterial;
+    private Material dissolveMaterial; // 원본 보호를 위한 머티리얼 인스턴스
 
     private void Awake()
     {
@@ -35,18 +39,15 @@ public class SceneTransitionManager : MonoBehaviour
     {
         if (fadeImage != null)
         {
-            // 원본 머티리얼 복사 (인스턴스화)
+            // 인스턴스화하여 원본 에셋의 값이 영구적으로 변형되는 것을 방지합니다.
             dissolveMaterial = new Material(fadeImage.material);
             fadeImage.material = dissolveMaterial; 
             
-            // [중요] Image(패널)의 기본 색상은 무조건 불투명하게(알파 1) 고정합니다!
-            // 그래야 셰이더가 정상적으로 화면에 그려집니다.
             fadeImage.color = new Color(1, 1, 1, 1);
         }
         
         if (transitionCanvasGroup != null)
         {
-            // 평소에는 캔버스 그룹을 꺼서 화면에 안 보이고 클릭도 안 되게 합니다.
             transitionCanvasGroup.gameObject.SetActive(false);
         }
     }
@@ -58,46 +59,42 @@ public class SceneTransitionManager : MonoBehaviour
 
     private IEnumerator TransitionRoutine(string sceneName)
     {
+        // 씬 전환 중 플레이어의 입력을 방지하기 위해 캔버스 활성화 및 블록 처리
         transitionCanvasGroup.gameObject.SetActive(true);
         transitionCanvasGroup.blocksRaycasts = true; 
 
-        // 1. 화면 덮기 (1 ➔ 0)
+        // 1. 디졸브 연출 시작 (화면 덮기)
         dissolveMaterial.SetFloat(dissolvePropertyName, 1f); 
+        // DOTween을 사용해 비동기로 머티리얼 수치를 조절하고 완료될 때까지 대기
         yield return dissolveMaterial.DOFloat(0f, dissolvePropertyName, dissolveDuration).WaitForCompletion();
 
-        // 2. 비동기 씬 로드
+        // 2. 비동기 씬 로딩 (백그라운드에서 씬 데이터를 읽어옴)
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-        asyncLoad.allowSceneActivation = false; 
+        asyncLoad.allowSceneActivation = false; // 로딩이 끝나도 자동으로 씬이 켜지지 않게 보류
 
-        // 로딩이 거의 끝날 때까지 대기 (유니티 비동기 로딩은 0.9에서 멈춥니다)
+        // 유니티 시스템상 비동기 로딩은 0.9 (90%)에서 완료 신호를 대기합니다.
         while (asyncLoad.progress < 0.9f)
         {
             yield return null;
         }
 
-        // 3. 씬 활성화! (이때 다음 씬의 무거운 연산들이 쏟아집니다)
+        // 3. 씬 활성화 및 초기화 대기
         asyncLoad.allowSceneActivation = true;
 
-        // ==========================================
-        // [핵심 해결책] 씬이 열리고 프레임이 안정화될 때까지 잠시 대기합니다!
-        // ==========================================
-        // 비동기 씬 로드가 완전히 끝날 때까지 1프레임씩 기다립니다.
+        // 씬 로딩이 100% 완료될 때까지 대기
         while (!asyncLoad.isDone)
         {
             yield return null;
         }
 
-        // 씬 전환이 끝나고 Awake/Start가 처리될 수 있도록 0.2초(또는 0.1초) 정도 약간의 여유를 줍니다.
-        // 이 짧은 대기 시간 동안은 화면이 완전히 까만(0) 상태로 멈춰있어 플레이어는 전혀 어색함을 느끼지 못합니다.
+        // 새 씬의 무거운 오브젝트들이 Awake/Start 되는 동안 프레임 드랍을 숨기기 위한 짧은 대기
         yield return new WaitForSeconds(0.2f); 
 
-        // ==========================================
-        // 4. 이제 프레임이 부드러워졌으니 화면 찢기 연출을 시작합니다! (0 ➔ 1)
-        // ==========================================
+        // 4. 화면 디졸브 연출 종료 (화면 열기)
         Tween dissolveTween = dissolveMaterial.DOFloat(1f, dissolvePropertyName, dissolveDuration).SetEase(Ease.InOutSine);
         yield return dissolveTween.WaitForCompletion();
 
-        // 5. 연출 종료
+        // 5. 원상복구 및 입력 제한 해제
         transitionCanvasGroup.gameObject.SetActive(false);
     }
 }

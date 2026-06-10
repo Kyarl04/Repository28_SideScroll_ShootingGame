@@ -1,12 +1,15 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// 플레이어의 이동(물리), 체력 관리, 피격 시 무적 처리(깜빡임)를 관리하는 메인 컨트롤러.
+/// </summary>
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float focusSpeedMultiplier = 0.5f;
-    [SerializeField] private float padding = 0.5f;
+    [SerializeField] private float focusSpeedMultiplier = 0.5f; // 저속 이동(Shift) 시 감속 비율
+    [SerializeField] private float padding = 0.5f; // 화면 밖으로 나가지 못하게 하는 여백
 
     private Rigidbody2D rb;
     private Vector2 moveInput;
@@ -32,11 +35,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        if (anim == null) 
-        {
-            anim = GetComponent<Animator>();
-        }
-        
+        if (anim == null) anim = GetComponent<Animator>();
         currentLives = maxLives;
         UpdateHeartUI();
     }
@@ -50,47 +49,48 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        // 1. 이동 입력 (깃허브 방식 적용)
+        // 1. 입력 처리 (Input)
         float inputX = Input.GetAxisRaw("Horizontal");
         float inputY = Input.GetAxisRaw("Vertical");
-        moveInput = new Vector2(inputX, inputY).normalized;
+        moveInput = new Vector2(inputX, inputY).normalized; // 대각선 이동 시 속도 증가 방지(Normalize)
         
         isFocused = Input.GetKey(KeyCode.LeftShift);
 
-        // 2. 무기 명령
+        // 2. 무기 및 스킬 트리거 (업데이트 프레임에서 감지)
         if (Input.GetKey(KeyCode.Z)) weapon.TryFire();
         if (Input.GetKeyDown(KeyCode.X)) weapon.TryActivateLaser();
 
-        // 3. 깃허브 방식 애니메이션 연동
-        if (anim != null)
-        {
-            anim.SetInteger("Horizontal", (int)inputX);
-        }
+        // 3. 방향 전환 애니메이션 세팅
+        if (anim != null) anim.SetInteger("Horizontal", (int)inputX);
     }
 
     private void FixedUpdate()
     {
+        // 물리 연산(FixedUpdate)을 통해 델타 타임에 안전하게 캐릭터를 이동시킵니다.
         float currentSpeed = isFocused ? moveSpeed * focusSpeedMultiplier : moveSpeed;
         Vector2 nextPos = rb.position + moveInput * currentSpeed * Time.fixedDeltaTime;
+        
+        // 카메라 뷰포트(화면) 경계를 벗어나지 못하도록 Clamp 처리
         nextPos.x = Mathf.Clamp(nextPos.x, minBound.x, maxBound.x);
         nextPos.y = Mathf.Clamp(nextPos.y, minBound.y, maxBound.y);
         rb.MovePosition(nextPos);
     }
 
+    /// <summary>
+    /// 플레이어 피격 시 체력을 깎고 무적 코루틴을 시작하는 함수
+    /// </summary>
     public void LoseLife()
     {
         if (SoundManager.Instance != null) SoundManager.Instance.PlayPlayerHit(); 
         
+        // 피격 시 UI 하트가 깨지는 연출 처리
         if (currentLives > 0 && currentLives <= hearts.Length)
         {
-            int brokenHeartIndex = currentLives - 1; // 방금 사라질 하트의 배열 번호
+            int brokenHeartIndex = currentLives - 1; 
             
             if (heartBreakEffectPrefab != null && hearts[brokenHeartIndex] != null)
             {
-                // 부서지는 하트와 똑같은 위치에 이펙트를 생성합니다. (UI 캔버스 안에서 생성되도록 부모 설정)
                 GameObject effect = Instantiate(heartBreakEffectPrefab, hearts[brokenHeartIndex].transform.position, Quaternion.identity, hearts[brokenHeartIndex].transform.parent);
-                
-                // 이펙트 재생이 끝나면 자동으로 지워지도록 1.5초 뒤 파괴
                 Destroy(effect, 1.5f);
             }
         }
@@ -102,9 +102,7 @@ public class PlayerController : MonoBehaviour
 
         if (currentLives <= 0) 
         {
-            gameObject.SetActive(false); // 플레이어 숨기기
-            
-            // [추가된 부분] 게임 오버 패널 띄우기
+            gameObject.SetActive(false); 
             if (GameManager.Instance != null) GameManager.Instance.ShowGameOver();
         }
         else 
@@ -123,22 +121,19 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("EnemyBullet") && !isInvincible)
+        if ((other.CompareTag("EnemyBullet") || other.CompareTag("ObstacleBullet")) && !isInvincible)
         {
             LoseLife();
         }
     }
 
-    // ==========================================
-    // [핵심 변경] 깜빡임 연출 중에도 옵션 매니저의 투명도를 따르도록 수정
-    // ==========================================
+    /// <summary>
+    /// 피격 시 무적 시간을 부여하고 캐릭터를 깜빡이게 하는 코루틴 (옵션 매니저의 투명도 동기화 포함)
+    /// </summary>
     private IEnumerator StartInvincibility()
     {
         isInvincible = true;
         
-        // ==========================================
-        // [추가됨] 무적 시작 시 이펙트를 켭니다! (플레이어 몸에 붙여서 따라다니게)
-        // ==========================================
         if (invincibilityEffectPrefab != null)
         {
             activeInvincibilityEffect = Instantiate(invincibilityEffectPrefab, transform.position, Quaternion.identity, transform);
@@ -149,6 +144,7 @@ public class PlayerController : MonoBehaviour
 
         while (timer < invincibilityDuration)
         {
+            // 실시간으로 환경설정의 알파값을 가져와 깜빡임(Lerp) 연출과 충돌하지 않게 설계했습니다.
             float targetAlpha = GameOptionManager.Instance != null ? GameOptionManager.Instance.CurrentPlayerAlpha : 1f;
 
             spriteRenderer.color = new Color(1, 1, 1, targetAlpha * 0.3f); 
@@ -166,19 +162,14 @@ public class PlayerController : MonoBehaviour
         
         isInvincible = false;
 
-        // ==========================================
-        // [추가됨] 무적 시간이 끝나면 이펙트를 끕니다!
-        // ==========================================
         if (activeInvincibilityEffect != null)
         {
-            // 이펙트가 부자연스럽게 뚝 끊기지 않도록 파티클 재생만 멈춥니다.
             ParticleSystem ps = activeInvincibilityEffect.GetComponent<ParticleSystem>();
             if (ps != null) ps.Stop();
-
-            // 파티클 잔상이 사라질 여유 시간을 주고 완전 파괴 (파티클이 아니면 즉시 파괴)
             Destroy(activeInvincibilityEffect, ps != null ? 1.0f : 0f);
         }
     }
+
     private void SetScreenBoundaries()
     {
         Camera cam = Camera.main;

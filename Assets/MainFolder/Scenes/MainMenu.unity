@@ -1743,6 +1743,7 @@ MonoBehaviour:
   playerLaserHitSFX: {fileID: 0}
   bossPhaseChangeSFX: {fileID: 8300000, guid: cb739a408a1c77544807b68867e9bf73, type: 3}
   playerHitSFX: {fileID: 8300000, guid: 7a9d3347c745dab41a695c2b28f30822, type: 3}
+  obstacleDestroySFX: {fileID: 8300000, guid: bd61da7b9fc9a984695194d9bb7acf7c, type: 3}
 --- !u!222 &3305728989874658164
 CanvasRenderer:
   m_ObjectHideFlags: 0

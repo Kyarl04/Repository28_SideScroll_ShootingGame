@@ -10,6 +10,7 @@ TagManager:
   - Bombstar
   - Bullet
   - Enemy
+  - ObstacleBullet
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - Enemy
   - EnemyBullet
   - Player
-  - 
+  - ObstacleBullet
   - 
   - 
   - 

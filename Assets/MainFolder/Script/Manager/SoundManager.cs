@@ -1,26 +1,28 @@
 using UnityEngine;
-using System.Collections; // 코루틴을 사용하기 위해 필요합니다.
+using System.Collections; 
 
+/// <summary>
+/// 씬(Scene)이 넘어가도 유지되며 게임 전체의 배경음악(BGM)과 효과음(SFX)을 관리하는 싱글톤 클래스.
+/// 자연스러운 BGM 전환을 위한 코루틴 페이드(Fade) 기법과 효과음 중복 재생 방지 로직이 구현되어 있습니다.
+/// </summary>
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
 
     [Header("오디오 소스 (Audio Sources)")]
-    public AudioSource bgmSource;         
-    public AudioSource sfxSource;         
-    public AudioSource loopingSfxSource;  
+    public AudioSource bgmSource;         // BGM 전용 채널
+    public AudioSource sfxSource;         // 단발성 효과음 전용 채널
+    public AudioSource loopingSfxSource;  // 레이저 등 지속되는 효과음 전용 채널 (루프)
 
     [Header("배경음악 (BGM)")]
     public AudioClip menuBGM;
     public AudioClip gameBGM;
     
     [Header("BGM Fade Settings")]
-    [Tooltip("음악이 서서히 바뀌는 데 걸리는 시간 (초 단위)")]
-    public float fadeDuration = 1.5f;     
-    [Tooltip("배경음악의 최대 볼륨 (0.0 ~ 1.0)")]
+    public float fadeDuration = 1.5f;     // 음악 전환에 걸리는 시간
     public float maxBgmVolume = 1.0f;     
     
-    private Coroutine currentFadeRoutine; // 현재 진행 중인 페이드 코루틴을 기억하는 변수
+    private Coroutine currentFadeRoutine; // 겹침 방지를 위해 현재 실행 중인 페이드 코루틴 추적
 
     [Header("효과음 (SFX)")]
     public AudioClip buttonClickSFX;      
@@ -30,12 +32,15 @@ public class SoundManager : MonoBehaviour
     public AudioClip playerLaserHitSFX;   
     public AudioClip bossPhaseChangeSFX;  
     public AudioClip playerHitSFX;        
+    public AudioClip obstacleDestroySFX;
 
-    private float bulletHitCooldown = 0.05f; // 0.05초 (필요에 따라 조절 가능)
+    // 피격음 중복 재생으로 인한 오디오 증폭(볼륨 폭발) 방지를 위한 쿨타임 변수
+    private float bulletHitCooldown = 0.05f; 
     private float lastBulletHitTime = -999f;
 
     private void Awake()
     {
+        // 씬 전환 시에도 오디오가 끊기지 않도록 DontDestroyOnLoad 적용
         if (Instance == null)
         {
             Instance = this;
@@ -49,59 +54,53 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
-        // 시작 시 메인 메뉴 BGM을 부드럽게 페이드 인 재생
         PlayBGM(menuBGM);
     }
 
     // ==========================================
-    // [BGM 제어 - 페이드 인/아웃 적용]
+    // [BGM 제어 - 코루틴을 활용한 오디오 페이드 인/아웃]
     // ==========================================
     public void PlayBGM(AudioClip newClip)
     {
-        if (newClip == null) return;
-        if (bgmSource.clip == newClip) return; // 이미 같은 곡이 재생 중이면 무시
+        if (newClip == null || bgmSource.clip == newClip) return; 
 
-        // 기존에 진행 중이던 페이드 효과가 있다면 즉시 중단합니다.
+        // 이전에 진행 중이던 페이드 효과가 있다면 충돌을 막기 위해 중단
         if (currentFadeRoutine != null)
         {
             StopCoroutine(currentFadeRoutine);
         }
 
-        // 새로운 페이드 코루틴 시작!
         currentFadeRoutine = StartCoroutine(FadeRoutine(newClip));
     }
 
     private IEnumerator FadeRoutine(AudioClip newClip)
     {
-        // 1. 현재 음악 페이드 아웃 (소리 점점 작아짐)
+        // 1. 기존 음악 서서히 줄이기 (Fade Out)
         if (bgmSource.isPlaying)
         {
             float startVolume = bgmSource.volume;
-
             while (bgmSource.volume > 0f)
             {
                 bgmSource.volume -= startVolume * (Time.deltaTime / fadeDuration);
-                yield return null; // 다음 프레임까지 대기
+                yield return null; 
             }
             bgmSource.Stop();
         }
 
-        // 2. 새로운 음악으로 교체
+        // 2. 새로운 음악으로 클립 교체
         bgmSource.clip = newClip;
         bgmSource.loop = true;
         bgmSource.Play();
 
-        // 3. 새로운 음악 페이드 인 (소리 점점 커짐)
+        // 3. 새로운 음악 서서히 키우기 (Fade In)
         bgmSource.volume = 0f;
-
         while (bgmSource.volume < maxBgmVolume)
         {
             bgmSource.volume += maxBgmVolume * (Time.deltaTime / fadeDuration);
             yield return null; 
         }
 
-        // 혹시 모를 오차를 방지하기 위해 목표 볼륨으로 딱 맞춰줌
-        bgmSource.volume = maxBgmVolume;
+        bgmSource.volume = maxBgmVolume; // 부동소수점 오차 보정
     }
     
     public void PlayGameBGM() => PlayBGM(gameBGM);
@@ -113,32 +112,33 @@ public class SoundManager : MonoBehaviour
     public void PlaySFX(AudioClip clip)
     {
         if (clip == null) return;
-        sfxSource.PlayOneShot(clip); 
+        sfxSource.PlayOneShot(clip); // 기존 소리를 끊지 않고 중첩해서 재생
     }
 
     public void PlayButtonClick() => PlaySFX(buttonClickSFX);
     public void PlayPlayerShoot() => PlaySFX(playerShootSFX);
     
+    /// <summary>
+    /// 여러 발의 총알이 동시에 적중했을 때 발생하는 사운드 증폭 버그 방지 래퍼 함수
+    /// </summary>
     public void PlayPlayerBulletHit() 
     {
-        // 현재 시간이 '마지막 재생 시간 + 0.05초'를 지났을 때만 재생!
         if (Time.time >= lastBulletHitTime + bulletHitCooldown)
         {
             PlaySFX(playerBulletHitSFX);
-            lastBulletHitTime = Time.time; // 마지막으로 재생한 시간을 지금으로 갱신
+            lastBulletHitTime = Time.time; 
         }
     }
 
     public void PlayPlayerLaserFire() => PlaySFX(playerLaserFireSFX);
     public void PlayBossPhaseChange() => PlaySFX(bossPhaseChangeSFX);
     public void PlayPlayerHit() => PlaySFX(playerHitSFX);
-
+    public void PlayObstacleDestroy() => PlaySFX(obstacleDestroySFX);
     // ==========================================
-    // [지속성 SFX 제어 (레이저 명중)]
+    // [지속성 SFX 제어 (레이저 명중 사운드 등)]
     // ==========================================
     public void StartLaserHitSFX()
     {
-        // [수정됨] loopingSfxSource가 비어있으면 아예 실행하지 않도록 방어막 추가!
         if (playerLaserHitSFX == null || loopingSfxSource == null) return; 
         
         if (!loopingSfxSource.isPlaying)
@@ -151,7 +151,6 @@ public class SoundManager : MonoBehaviour
 
     public void StopLaserHitSFX()
     {
-        // [수정됨] 끌 때도 스피커가 있는지 먼저 확인합니다.
         if (loopingSfxSource != null) 
         {
             loopingSfxSource.Stop();

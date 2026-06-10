@@ -5,35 +5,35 @@ using UnityEngine;
 namespace Danmaku.Data
 {
     /// <summary>
-    /// 발사 각도 변화의 계산 방식을 정의합니다.
+    /// 탄막의 각도가 시간의 흐름에 따라 어떻게 변화할지 계산 방식을 정의합니다.
     /// </summary>
     public enum OffsetType
     {
-        None,   // 변함 없음
-        Linear, // 선형적(일정하게) 변화
-        Sin     // 사인 곡선(물결치듯) 변화
+        None,   // 변화 없음
+        Linear, // 일정한 속도로 회전
+        Sin     // 사인 파동에 따라 흔들리며 발사
     }
 
+    /// <summary>
+    /// 탄막 발사의 단일 웨이브(Barrage) 데이터를 관리하는 ScriptableObject입니다.
+    /// 보스의 각 페이즈 내에서 여러 번 실행되는 탄막의 기본 발사 설정을 담습니다.
+    /// </summary>
     [CreateAssetMenu(fileName = "Barrage Data", menuName = "DanmakuData/BarrageData", order = 0)]
     public class BarrageData : ScriptableObject
     {
-        [Tooltip("사용할 총알의 기본 데이터")]
+        [Tooltip("사용할 총알의 속성(속도, lifetime 등) 데이터")]
         public ShotData shotData;
 
-        /// <summary>스펠카드 시작 후 첫 번째 탄막을 발사하기까지 대기하는 시간</summary>
         [Tooltip("스펠카드 시작 후 첫 탄막 발사 대기 시간")]
         public float startDelay;
 
-        /// <summary>발사 패턴(웨이브) 간의 휴식 간격</summary>
-        [Tooltip("두 발사 패턴 사이의 시간 간격")]
+        [Tooltip("연속적인 웨이브 발사 간의 휴식 시간")]
         public float interval;
 
-        /// <summary>어떻게 발사할 것인지 정의한 데이터</summary>
-        [Tooltip("발사 형태 및 방식 데이터")]
+        [Tooltip("발사 모양(원형, 부채꼴 등) 데이터")]
         public FireData fireData;
 
-        /// <summary>발사 각도의 주기적인 변화 설정</summary>
-        [Tooltip("발사 각도가 변하는 주기 설정 (예: 좌우로 흔들리는 탄막)")]
+        [Tooltip("발사 각도가 시간 흐름에 따라 변화하는 기믹 설정")]
         public FireOffset fireOffset;
 
         public BarrageData(ShotData shotData, FireData fd, float interval, float delay = 0f)
@@ -45,10 +45,13 @@ namespace Danmaku.Data
         }
     }
 
+    /// <summary>
+    /// 발사 각도를 주기적으로 변화시켜 탄막에 기하학적 무늬(예: 소용돌이)를 만드는 설정 클래스.
+    /// </summary>
     [System.Serializable]
     public class FireOffset
     {
-        [Tooltip("각도 변화의 1 사이클 길이")]
+        [Tooltip("각도 변화의 1 사이클 길이 (총알 발사 횟수 기준)")]
         public int cycle;
 
         [Tooltip("사이클을 시작할 인덱스 위치")]
@@ -57,12 +60,10 @@ namespace Danmaku.Data
         [Tooltip("각도가 변화하는 최대 범위")]
         public float range = 360f;
 
-        /// <summary>발사 각도 변화 계산 방법</summary>
-        [Tooltip("각도가 어떻게 변할지 설정 (선형, 사인 파동 등)")]
+        [Tooltip("각도 변화 방식: 선형(Linear) 또는 파동(Sin)")]
         public OffsetType type = OffsetType.Linear;
 
-        /// <summary>각도가 한계에 다다랐을 때 왕복할지(True), 초기 위치로 튕겨 돌아갈지(False) 여부</summary>
-        [Tooltip("왕복 운동(와이퍼 형태) 여부")]
+        [Tooltip("왕복 운동(와이퍼 형태) 여부: True면 좌우로 흔들림")]
         public bool reciprocate = false;
     }
 }
