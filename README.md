@@ -1,2 +1,3 @@
 # Repository28_SideScroll_ShootingGame
-TouhouSTG
+STG
+
