@@ -72,40 +72,40 @@ MonoBehaviour:
   hpBarContainer: {fileID: 7997586232868471785}
   phases:
   - pattern: {fileID: 11400000, guid: 09316c9f9976a7a4091b06f2519749f8, type: 2}
-    phaseHP: 100
+    phaseHP: 400
     transitionEffect: {fileID: 4841770571690889360, guid: 278dadc711371e743be879a0aac11731, type: 3}
     auraEffect: {fileID: 969144842202437255, guid: 27ee9b95946188c41b0648ba234adfb0, type: 3}
     newBackground: []
     customDissolveMaterial: {fileID: 2100000, guid: f7d17e72ea9c6814fa6131def595de64, type: 2}
-  - pattern: {fileID: 11400000, guid: cee84e4f3ab7e3340a0f0e2ad6d85a84, type: 2}
-    phaseHP: 100
+  - pattern: {fileID: 11400000, guid: 8e1ac2d4598a3d446aa2e2dd6553de10, type: 2}
+    phaseHP: 400
     transitionEffect: {fileID: 4841770571690889360, guid: 278dadc711371e743be879a0aac11731, type: 3}
     auraEffect: {fileID: 6241524573626554087, guid: 3a2d6919a58b4734d833b93f986978bd, type: 3}
-    newBackground:
-    - {fileID: 21300000, guid: ef5c348c09036894ba3d7ecb28ceafe6, type: 3}
-    - {fileID: 21300000, guid: ef5c348c09036894ba3d7ecb28ceafe6, type: 3}
-    - {fileID: 21300000, guid: ef5c348c09036894ba3d7ecb28ceafe6, type: 3}
+    newBackground: []
     customDissolveMaterial: {fileID: 2100000, guid: f7d17e72ea9c6814fa6131def595de64, type: 2}
-  - pattern: {fileID: 11400000, guid: 84b3872a5bce9f14b92e9e4de75c0f14, type: 2}
-    phaseHP: 100
+  - pattern: {fileID: 11400000, guid: cee84e4f3ab7e3340a0f0e2ad6d85a84, type: 2}
+    phaseHP: 400
     transitionEffect: {fileID: 4841770571690889360, guid: 278dadc711371e743be879a0aac11731, type: 3}
     auraEffect: {fileID: 1116574390217911232, guid: c1acf69c1d2b13b47ba5e28cf1cf2822, type: 3}
-    newBackground:
-    - {fileID: 21300000, guid: d6365c587114fba4c8d853130807e9af, type: 3}
-    - {fileID: 21300000, guid: d6365c587114fba4c8d853130807e9af, type: 3}
-    - {fileID: 21300000, guid: d6365c587114fba4c8d853130807e9af, type: 3}
+    newBackground: []
     customDissolveMaterial: {fileID: 2100000, guid: f7d17e72ea9c6814fa6131def595de64, type: 2}
-  - pattern: {fileID: 11400000, guid: 81b063ccb3a087c4f81eb9defdd815de, type: 2}
-    phaseHP: 100
+  - pattern: {fileID: 11400000, guid: 84b3872a5bce9f14b92e9e4de75c0f14, type: 2}
+    phaseHP: 400
     transitionEffect: {fileID: 4841770571690889360, guid: 278dadc711371e743be879a0aac11731, type: 3}
     auraEffect: {fileID: 3813241975161217031, guid: 698b9cb86d3a76b4e930e6a9faf5ec0b, type: 3}
-    newBackground: []
+    newBackground:
+    - {fileID: 21300000, guid: a0829ae2f2c7491439ed3449d8d01382, type: 3}
+    - {fileID: 21300000, guid: a0829ae2f2c7491439ed3449d8d01382, type: 3}
+    - {fileID: 21300000, guid: a0829ae2f2c7491439ed3449d8d01382, type: 3}
     customDissolveMaterial: {fileID: 2100000, guid: f7d17e72ea9c6814fa6131def595de64, type: 2}
-  - pattern: {fileID: 11400000, guid: 1d49d65a26a52874cbb7acf3977cda9b, type: 2}
-    phaseHP: 100
+  - pattern: {fileID: 11400000, guid: 81b063ccb3a087c4f81eb9defdd815de, type: 2}
+    phaseHP: 400
     transitionEffect: {fileID: 4841770571690889360, guid: 278dadc711371e743be879a0aac11731, type: 3}
     auraEffect: {fileID: 1183774184521361367, guid: 55525b8e474e9b149b60bb4952bc2fc0, type: 3}
-    newBackground: []
+    newBackground:
+    - {fileID: 21300000, guid: a0829ae2f2c7491439ed3449d8d01382, type: 3}
+    - {fileID: 21300000, guid: a0829ae2f2c7491439ed3449d8d01382, type: 3}
+    - {fileID: 21300000, guid: a0829ae2f2c7491439ed3449d8d01382, type: 3}
     customDissolveMaterial: {fileID: 2100000, guid: f7d17e72ea9c6814fa6131def595de64, type: 2}
   centerPosition: {x: 6, y: 0, z: 0}
   bgPanelImage: {fileID: 0}
@@ -113,7 +113,7 @@ MonoBehaviour:
   bgDissolveProperty: _DissolveFloat
   bgTransitionDuration: 1
   isTransitioning: 0
-  obstacleSpawner: {fileID: 0}
+  obstacleSpawner: {fileID: 8331298761721655684}
 --- !u!114 &8331298761721655684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,12 +127,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obstaclePoolIndex: 16
-  explosionEffectIndex: 0
-  spawnInterval: 0.5
+  explosionEffectIndex: 3
+  spawnInterval: 0.3
   obstacleSpeed: 4
-  obstacleHealth: 20
-  minY: -4
-  maxY: 4
+  obstacleHealth: 5
+  minY: -4.5
+  maxY: 4.5
 --- !u!212 &7997586231787002117
 SpriteRenderer:
   m_ObjectHideFlags: 0

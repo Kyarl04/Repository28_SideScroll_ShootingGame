@@ -26031,7 +26031,7 @@ MonoBehaviour:
   - {fileID: 5932898139017655165, guid: 9480f6c991f0ed24ab3202d4455ca820, type: 3}
   - {fileID: 1666843977450886786}
   - {fileID: 1948529037051913089, guid: c43d41b50be6dfe4fb88cb15fd5f50b9, type: 3}
-  poolSizePerEffect: 100
+  poolSizePerEffect: 200
 --- !u!1 &5241340731062908706
 GameObject:
   m_ObjectHideFlags: 0
